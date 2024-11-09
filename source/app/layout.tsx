@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import * as stylex from "@stylexjs/stylex";
+import { colors, fonts } from "./vars.stylex";
+import { useState } from "react";
+import ThemeControl from "./ThemeControl";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -24,10 +15,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
-      </body>
+    <html {...stylex.props(styles.html)} lang="en">
+      <ThemeControl style={styles.body}>{children}</ThemeControl>
     </html>
   );
 }
+
+const styles = stylex.create({
+  html: {
+    colorScheme: "light dark",
+    boxSizing: {
+      default: "border-box",
+      ":not(#_) *": "border-box",
+    },
+  },
+  body: {
+    color: colors.fg,
+    backgroundColor: colors.bg,
+    fontFamily: fonts.sans,
+    WebkitFontSmoothing: "antialiased",
+    MozOsxFontSmoothing: "grayscale",
+  },
+});
