@@ -62,7 +62,7 @@ const getBlogPosts = unstable_cache(async () => {
 
   return maybePostsResolved
     .filter((post) => post !== null)
-    .toSorted((a, b) =>
+    .sort((a, b) =>
       a.date != null && b.date != null ? b.date.localeCompare(a.date) : 0
     );
 });
