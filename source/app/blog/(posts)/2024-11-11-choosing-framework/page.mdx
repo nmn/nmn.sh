@@ -1,0 +1,57 @@
+export const metadata = {
+  title: "There is no best framework",
+  date: "2024-11-11",
+  author: "Naman Goel",
+  published: true,
+  tags: ["frameworks", "JavaScript"],
+  description:
+    "Before you start debating whether React is better than Vue, or Angular is better than Svelte, remember that there is no best framework.",
+};
+
+import { Container, Word } from "../../SlabTitle";
+
+<Container>
+  <Word scale={66}>There</Word>
+  <Word scale={21}>is</Word>
+  <Word scale={29}>no</Word>
+  <Word scale={81} italic>
+    {"best"}
+  </Word>
+  <Word scale={140}>framework</Word>
+</Container>
+
+If you've even dipped your toe into the world of web development discource online,
+you've probably seen the endless debates, arguments and flame wars about which is
+the "best" framework. The React camp might argue about it's adoption and featureset.
+The Solid.js camp may argue about it's performance and point to certain benchmarks.
+The Svelte camp might argue about it's simplicity and point to that one-liner meme.
+
+Turns out, there is no best framework. But this isn't just a cop out where I say "it depends",
+and say that every framework has it's use-cases. I mean, that's true, but that's not the point
+I'm trying to make. What's important to understand isn't just what each framework _is_ good at,
+but to understand what problems each framework is even _trying_ to solve.
+
+Let's take React as an example. React doesn't often win performance benchmarks and
+that is often used as an attack against it. However, React isn't _trying_ to be the fastest
+at synthetic benchmarks. If you pay attention to what the React team has been saying,
+you'd start to see some of the core priorities of React:
+
+- The data being rendered by React should not need to be wrapped in a special data structure.
+- It should be easy to reason about the UI as a function of data and state
+- It should be easy to keep UI responsive as it scales in complexity
+
+Now consider what Ryan Carniato seems to prioritize when working on Solid.js:
+
+- Make use of fine-grained reactivity and minime the work needed for updates
+- Maximize performance for common use-cases
+- Strive for architectural simplicity and minimalism
+
+One way I like to think about this is that Solid is like a really fast and well optimized
+single-threaded program, while React is like a massively multi-threaded program. In many
+cases the extra threads might add unnecceary overhead, but in some cases, it might be
+exactly what you need. Solid might be faster in most cases, but that performance means
+that features such as concurrent rendering aren't prioritized as highly.
+
+These are two extremely different approaches to building UIs. One of them may be better
+suited to a particular project, but more importantly, one of them might align more closely
+with how _you_ think.

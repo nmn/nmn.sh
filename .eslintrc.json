@@ -2,8 +2,10 @@
   "extends": ["next/core-web-vitals", "next/typescript"],
   "plugins": ["@stylexjs"],
   "rules": {
-    "@stylexjs/valid-styles": "error",
-    "@stylexjs/sort-keys": "warning",
-    "@stylexjs/valid-shorthands": "off"
-  }
+    "@typescript-eslint/no-unused-vars": [2, { "argsIgnorePattern": "^_" }],
+    "@stylexjs/valid-styles": 2,
+    "@stylexjs/sort-keys": 1,
+    "@stylexjs/valid-shorthands": 0
+  },
+  "ignorePatterns": "src/**/*"
 }

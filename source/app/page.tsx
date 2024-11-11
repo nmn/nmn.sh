@@ -1,6 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import Logo from "./Logo";
 import Link from "next/link";
+import { spacing } from "./vars.stylex";
 
 export default function Home() {
   return (
@@ -20,23 +21,22 @@ export default function Home() {
         </nav>
       </header>
       <main></main>
-      <footer {...stylex.props(styles.footer)}>Coming Soon...</footer>
     </div>
   );
 }
 
 const styles = stylex.create({
   header: {
+    alignItems: "center",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    gap: 32,
     justifyContent: "center",
-    paddingBlock: 48,
     minHeight: {
       default: "90vh",
       "@supports (height: 100dvh)": "90dvh",
     },
-    gap: 32,
+    paddingBlock: spacing.sm,
   },
   h3: {
     fontSize: "2rem",
@@ -44,26 +44,22 @@ const styles = stylex.create({
     margin: 0,
   },
   logo: {
-    width: "calc(100% - 32px)",
     maxWidth: 800,
     transform: "translateX(1.5%)",
+    width: "calc(100% - 32px)",
   },
   nav: {
     display: "flex",
     gap: 48,
   },
   navLink: {
-    textTransform: "uppercase",
-    width: "3.8rem",
+    color: "light-dark(crimson, cornflowerblue)",
     textDecoration: {
       default: "none",
       ":hover": "underline",
     },
-    textUnderlineOffset: 8,
-    color: "light-dark(crimson, cornflowerblue)",
-  },
-  footer: {
-    textAlign: "center",
-    paddingBlock: 32,
+    textTransform: "uppercase",
+    textUnderlineOffset: "8px",
+    width: "3.8rem",
   },
 });

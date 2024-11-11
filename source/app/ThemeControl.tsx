@@ -1,7 +1,7 @@
 "use client";
 
 import * as stylex from "@stylexjs/stylex";
-import { colors, fonts } from "./vars.stylex";
+import { colors, spacing } from "./vars.stylex";
 import { useState } from "react";
 
 export default function ThemeControl({
@@ -14,7 +14,7 @@ export default function ThemeControl({
   const [theme, setTheme] = useState<"light" | "system" | "dark">("system");
 
   return (
-    <body {...stylex.props(themes[theme], style)}>
+    <body {...stylex.props(themes[theme], styles.container, style)}>
       <div {...stylex.props(styles.tabs)}>
         <button
           {...stylex.props(styles.btn, theme === "dark" && styles.btnActive)}
@@ -41,28 +41,37 @@ export default function ThemeControl({
 }
 
 const styles = stylex.create({
+  container: {
+    alignItems: "stretch",
+    display: "flex",
+    flexDirection: "column",
+    minHeight: {
+      default: "100vh",
+      "@supports (height: 100dvh)": "100dvh",
+    },
+  },
   tabs: {
+    padding: spacing.sm,
     position: "absolute",
-    top: 0,
     right: 0,
-    padding: 16,
+    top: 0,
     width: "auto",
   },
   btn: {
     appearance: "none",
-    borderStyle: "none",
     backgroundColor: "transparent",
+    borderRadius: 4,
+    borderStyle: "none",
     color: colors.fg,
     cursor: "pointer",
-    padding: 8,
-    width: 32,
     height: 32,
     opacity: 0.33,
-    borderRadius: 4,
+    padding: spacing.xxs,
+    width: 32,
   },
   btnActive: {
-    opacity: 1,
     backgroundColor: "rgba(14, 125, 243, 0.5)",
+    opacity: 1,
   },
 });
 

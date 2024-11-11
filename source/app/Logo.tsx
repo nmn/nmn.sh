@@ -49,13 +49,13 @@ const styles = stylex.create({
     fill: colors.fg,
   },
   outerScale: {
-    transformOrigin: "center",
     scale: `calc(0.75 + ${vars.collapsed} * 0.25)`,
+    transformOrigin: "center",
     transitionProperty: "scale",
   },
   letter: {
-    transitionProperty: "transform",
     transitionDuration: "0.15s",
+    transitionProperty: "transform",
     transitionTimingFunction: "ease-out",
   },
   nLeft: { transform: `translateX(calc(${vars.collapsed} * 33.7%))` },
