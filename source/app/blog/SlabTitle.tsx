@@ -81,17 +81,17 @@ const styles = stylex.create({
   text: {
     fill: "currentColor",
     fontFamily: "var(--font-inter)",
-    lineHeight: 1,
     fontSize: 28,
     letterSpacing: "-0.05em",
+    lineHeight: 1,
   },
   italic: {
     color: colors.accent,
-    textTransform: "initial",
     fontFamily:
       "Baskerville, 'Baskerville Old Face', 'Palatino Linotype', serif",
     fontSize: 33,
     fontStyle: "italic",
     fontWeight: "lighter",
+    textTransform: "initial",
   },
 });
