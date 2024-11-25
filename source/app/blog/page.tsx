@@ -8,7 +8,7 @@ import * as runtime from "react/jsx-runtime";
 // import * as provider from "@mdx-js/react";
 import { evaluate } from "@mdx-js/mdx";
 import { unstable_cache } from "next/cache";
-import { colors, spacing, text } from "../vars.stylex";
+import { colors, fonts, spacing, text } from "@/app/vars.stylex";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -24,6 +24,7 @@ type Config = {
 
 const getBlogPosts = unstable_cache(async () => {
   const blogs = await fs.readdir(blogDir);
+
   // filter for only folders
   const blogsPathsAndTitles = blogs.map(async (blog) => {
     const blogPath = path.join(blogDir, blog);
@@ -71,17 +72,21 @@ export default async function Home() {
   // read all subdirectories in the blog directory
 
   const posts = await getBlogPosts();
+  console.log(posts);
+  const publishedPosts = posts.filter((post) => post.published);
 
   return (
     <div>
-      <H1>Latest Posts</H1>
+      <H1 xstyle={styles.h1}>Latest Posts</H1>
       <Ul xstyle={styles.ul}>
-        {posts.map((post) => (
+        {publishedPosts.map((post) => (
           <li {...stylex.props(styles.li)} key={post.path}>
-            <Link {...stylex.props(styles.link)} href={post.path}>
-              {post.title}
-            </Link>
-            <span {...stylex.props(styles.date)}>{post.date}</span>
+            <div {...stylex.props(styles.row)}>
+              <Link {...stylex.props(styles.link)} href={post.path}>
+                {post.title}
+              </Link>
+              <span {...stylex.props(styles.date)}>{post.date}</span>
+            </div>
             <P xstyle={styles.p}>{post.description}</P>
           </li>
         ))}
@@ -91,8 +96,12 @@ export default async function Home() {
 }
 
 const styles = stylex.create({
+  h1: {
+    textAlign: "center",
+    textWrap: "balance",
+  },
   ul: {
-    borderBottomColor: `color-mix(in oklch, colors.fg, transparent 75%)`,
+    borderBottomColor: `color-mix(in oklch, ${colors.fg}, transparent 75%)`,
     borderBottomStyle: "solid",
     borderBottomWidth: {
       default: 1,
@@ -104,7 +113,7 @@ const styles = stylex.create({
     width: "100%",
   },
   li: {
-    borderTopColor: `color-mix(in oklch, colors.fg, transparent 75%)`,
+    borderTopColor: `color-mix(in oklch, ${colors.fg}, transparent 75%)`,
     borderTopStyle: "solid",
     borderTopWidth: {
       default: 1,
@@ -112,15 +121,12 @@ const styles = stylex.create({
       "@media (min-resolution: 3dppx)": 0.33,
     },
     display: "flex",
-    flexWrap: "wrap",
-    lineHeight: {
-      default: 1,
-      "@supports (line-height: 1cap)": "1cap",
-    },
+    flexDirection: "column",
+    gap: spacing.xxs,
     listStyle: "none",
     margin: 0,
-    paddingBottom: spacing.sm,
-    paddingTop: spacing.md,
+    paddingBlock: spacing.md,
+    // paddingInline: spacing.xs,
   },
   link: {
     color: {
@@ -128,13 +134,25 @@ const styles = stylex.create({
       ":hover": colors.accent,
     },
     flexGrow: 1,
-    fontSize: text.h3,
+    fontSize: text.h4,
+    fontWeight: 800,
+    lineHeight: 0.9,
     textDecoration: "none",
+    textTransform: "uppercase",
+  },
+  row: {
+    display: "flex",
+    gap: spacing.md,
+    width: "100%",
   },
   date: {
+    flexShrink: 0,
+    fontFamily: fonts.mono,
     opacity: 0.5,
   },
   p: {
+    lineHeight: 1.2,
+    marginTop: null,
     opacity: 0.5,
     width: "100%",
   },

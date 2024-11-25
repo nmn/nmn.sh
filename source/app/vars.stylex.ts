@@ -20,7 +20,7 @@ export const fonts = stylex.defineVars({
     "'Helvetica Neue'",
     "sans-serif",
   ].join(", "),
-  fontMono: [
+  mono: [
     "ui-monospace",
     "Menlo",
     "Monaco",

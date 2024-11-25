@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { vars } from "./logoVars.stylex";
-import { colors } from "./vars.stylex";
+import { colors } from "@/app/vars.stylex";
 
 type Props = {
   style?: stylex.StyleXStyles;

@@ -14,7 +14,7 @@
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.0.3",
-    "@stylexjs/stylex": "^0.9.3",
+    "@stylexjs/stylex": "^0.10.0-beta.1",
     "@types/mdx": "^2.0.13",
     "bright": "^0.8.5",
     "next": "15.0.3",
@@ -23,11 +23,12 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
-    "@stylexjs/cli": "^0.9.3",
-    "@stylexjs/eslint-plugin": "^0.9.3",
+    "@stylexjs/cli": "^0.10.0-beta.1",
+    "@stylexjs/eslint-plugin": "^0.10.0-beta.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "babel-plugin-alias-config": "^0.0.16",
     "eslint": "^8",
     "eslint-config-next": "15.0.3",
     "typescript": "^5"

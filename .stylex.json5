@@ -6,6 +6,17 @@
   babelPresets: [
     ["@babel/preset-typescript", { allExtensions: true, isTSX: true }],
   ],
+  babelPluginsPre: [
+    "babel-plugin-alias-config",
+    // [
+    //   "babel-plugin-module-resolver",
+    //   {
+    //     alias: {
+    //       "@/**/*": "/Users/nmn/Developer/myCode/blog/nmn.sh/source/",
+    //     },
+    //   },
+    // ],
+  ],
   styleXConfig: {
     aliases: {
       "@/*": ["./source/*"],

@@ -14,20 +14,25 @@ export function Word({
   children,
   scale,
   italic,
+  offset = 0,
 }: Readonly<{
   children: string;
   scale: number;
   italic?: boolean;
+  offset: number;
 }>) {
-  const height = 23.5;
+  const height = italic ? 21 + 10 : 21;
   return (
     <div {...stylex.props(styles.word(scale))}>
       <div {...stylex.props(styles.wordInnerDiv)}>
-        <svg {...stylex.props(styles.svg)} viewBox={`0 0 ${scale} ${height}`}>
+        <svg
+          {...stylex.props(styles.svg, italic && styles.italicSvg)}
+          viewBox={`0 0 ${scale} ${height}`}
+        >
           <text
             {...stylex.props(styles.text, italic && styles.italic)}
-            x="-1"
-            y="22.5"
+            x={offset}
+            y={italic ? 30 : 20}
           >
             {children}
           </text>
@@ -39,14 +44,14 @@ export function Word({
 
 const styles = stylex.create({
   constainer: {
-    alignItems: "stretch",
-    columnGap: spacing.sm,
+    alignItems: "center",
+    columnGap: spacing.xs,
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "center",
     marginInline: "auto",
     maxWidth: "62rem",
-    rowGap: spacing.xxs,
+    rowGap: 8,
     width: "100%",
   },
   word: (scale: number) => ({
@@ -63,19 +68,26 @@ const styles = stylex.create({
     display: "flex",
     height: "100%",
     justifyContent: "center",
+    overflow: "hidden",
     position: "relative",
   },
   svg: {
     aspectRatio: "inherit",
     width: "100%",
   },
+  italicSvg: {
+    marginTop: "-16%",
+  },
   text: {
     fill: "currentColor",
-    fontFamily: "Impact",
+    fontFamily: "var(--font-inter)",
+    lineHeight: 1,
     fontSize: 28,
+    letterSpacing: "-0.05em",
   },
   italic: {
     color: colors.accent,
+    textTransform: "initial",
     fontFamily:
       "Baskerville, 'Baskerville Old Face', 'Palatino Linotype', serif",
     fontSize: 33,
