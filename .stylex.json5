@@ -8,14 +8,7 @@
   ],
   babelPluginsPre: [
     "babel-plugin-alias-config",
-    // [
-    //   "babel-plugin-module-resolver",
-    //   {
-    //     alias: {
-    //       "@/**/*": "/Users/nmn/Developer/myCode/blog/nmn.sh/source/",
-    //     },
-    //   },
-    // ],
+    ["./node_modules/tailwind-to-stylex"],
   ],
   styleXConfig: {
     aliases: {

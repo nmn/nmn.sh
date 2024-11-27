@@ -43,12 +43,12 @@ const styles = stylex.create({
   html: {
     boxSizing: {
       default: "border-box",
-      ":not(#_) *": "border-box",
+      ":where(#\\#), *": "border-box",
     },
     colorScheme: "light dark",
     margin: {
       default: 0,
-      ":not(#_) *": 0,
+      ":where(#\\#), *": 0,
     },
   },
   body: {
