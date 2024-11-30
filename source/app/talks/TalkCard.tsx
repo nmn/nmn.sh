@@ -1,36 +1,45 @@
-import React from "react";
+import React, { useId } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import * as stylex from "@stylexjs/stylex";
-
-import tw from "tailwind-to-stylex/tw";
-import { colors } from "@/app/vars.stylex";
+import { colors, spacing, text } from "@/app/vars.stylex";
 import type { Talk } from "./Talk";
+import { H4, P } from "../../mdx-components";
 
 const TalkCard = ({ talk }: { talk: Talk }) => {
-
-  const imgWrapperBase = tw("relative mb-2 overflow-hidden rounded-[40px]");
-
+  const id = useId();
   return (
-    <div className="test flex flex-col">
-      <a href={talk.link} target="_blank">
-        <div {...stylex.props( imgWrapperBase, s.imageWrapper )}>
-          <img
-            {...stylex.props(tw("select-none object-cover text-transparent"), s.img)}
+    <div>
+      <a
+        {...stylex.props(s.link)}
+        href={talk.link}
+        target="_blank"
+        aria-describedby={id}
+      >
+        <div {...stylex.props(s.imageWrapper)}>
+          <Image
+            {...stylex.props(s.img)}
             src={talk.image.src}
             width={talk.image.width}
             height={talk.image.height}
+            alt=""
           />
         </div>
+        <H4 xstyle={s.h4} id={id}>
+          {talk.title}
+        </H4>
       </a>
       <div>
-        <p className="font-freight text-[20px] font-semibold leading-tight md:text-[25px] text-dark">
-          {talk.title}
-        </p>
-        <p className="font-freight font-normal md:text-[20px] text-[13px] text-dark">
-          <Link {...stylex.props(s.link)} href={talk.conferenceLink} target="_blank">{talk.conference}</Link>
-        </p>
+        <P xstyle={s.p}>
+          <Link
+            {...stylex.props(s.link)}
+            href={talk.conferenceLink}
+            target="_blank"
+          >
+            {talk.conference}
+          </Link>
+        </P>
       </div>
     </div>
   );
@@ -38,48 +47,38 @@ const TalkCard = ({ talk }: { talk: Talk }) => {
 
 const s = stylex.create({
   imageWrapper: {
-    width: '100%',
     aspectRatio: 16 / 9,
-    height: 'auto',
+    height: "auto",
+    width: "100%",
   },
   img: {
-    height: '100%',
-    width: '100%',
-    objectFit: 'cover',
+    borderRadius: spacing.xxs,
+    color: "transparent",
+    height: "100%",
+    objectFit: "cover",
+    userSelect: "none",
+    width: "100%",
+  },
+  h4: {
+    color: colors.fg,
+    fontSize: text.h5,
+    lineHeight: 1.1,
+    marginTop: spacing.xxs,
+    // textDecoration: "none",
+  },
+  p: {
+    color: colors.accent,
+    marginTop: spacing.xxxs,
   },
   link: {
-    color: colors.accent,
+    color: "inherit",
     textDecoration: {
-      default: 'none',
-      ':hover': 'underline',
-      ':focus': 'underline',
+      default: "none",
+      ":hover": "underline",
+      ":focus": "underline",
     },
-    textUnderlineOffset: 4,
-  }
-})
+    textUnderlineOffset: "4px",
+  },
+});
 
 export default TalkCard;
-
-{
-  /* <div className="test flex flex-col">
-      <a href={talk.link}>
-        <div className="image-wrapper relative mb-2 w-[320px] overflow-hidden rounded-[40px] md:w-[320px] h-[180px]">
-          <Image
-            {...stylex.props(tw("h-[180px] w-[320px] select-none object-cover color-transparent"))}
-            alt={talk.title}
-            src={talk.image.src}
-            width={talk.image.width}
-            height={talk.image.height}
-          />
-        </div>
-      </a>
-      <div className="w-[320px] md:w-[320px]">
-        <p className="font-freight text-[20px] font-semibold leading-tight md:text-[25px] text-dark">
-          {talk.title}
-        </p>
-        <p className="font-freight font-normal md:text-[20px] text-[13px] text-dark">
-          <Link {...stylex.props(tw("text-dark text-lime-500"))} href={talk.conferenceLink}>{talk.conference}</Link>
-        </p>
-      </div>
-    </div> */
-}

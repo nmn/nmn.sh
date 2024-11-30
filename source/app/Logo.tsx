@@ -3,13 +3,17 @@ import { vars } from "./logoVars.stylex";
 import { colors } from "@/app/vars.stylex";
 
 type Props = {
+  collapsible?: boolean;
   style?: stylex.StyleXStyles;
 };
 
-export default function Logo({ style }: Props) {
+export default function Logo({ collapsible = false, style }: Props) {
   return (
-    <svg {...stylex.props(styles.container, style)} viewBox="0 0 1872 419">
-      <g {...stylex.props(styles.letter, styles.outerScale)}>
+    <svg
+      {...stylex.props(styles.container, collapsible && styles.collapse, style)}
+      viewBox="0 0 1872 419"
+    >
+      <g {...stylex.props(styles.letter, collapsible && styles.outerScale)}>
         <path
           {...stylex.props(styles.letter, styles.nLeft)}
           aria-label="N"
@@ -42,11 +46,16 @@ export default function Logo({ style }: Props) {
 
 const styles = stylex.create({
   container: {
+    aspectRatio: 1872 / 419,
+    containerType: "inline-size",
+    [vars.collapsed]: 0,
+    fill: colors.fg,
+  },
+  collapse: {
     [vars.collapsed]: {
       default: 1,
       ":hover": 0,
     },
-    fill: colors.fg,
   },
   outerScale: {
     scale: `calc(0.75 + ${vars.collapsed} * 0.25)`,
@@ -58,8 +67,16 @@ const styles = stylex.create({
     transitionProperty: "transform",
     transitionTimingFunction: "ease-out",
   },
-  nLeft: { transform: `translateX(calc(${vars.collapsed} * 33.7%))` },
-  aLeft: { transform: `translateX(calc(${vars.collapsed} * 15.11%))` },
-  aRight: { transform: `translateX(calc(${vars.collapsed} * -15.17%))` },
-  nRight: { transform: `translateX(calc(${vars.collapsed} * -30.235%))` },
+  nLeft: {
+    transform: `translateX(calc(${vars.collapsed} * 79cqi))`,
+  },
+  aLeft: {
+    transform: `translateX(calc(${vars.collapsed} * 35.4cqi))`,
+  },
+  aRight: {
+    transform: `translateX(calc(${vars.collapsed} * -35.4cqi))`,
+  },
+  nRight: {
+    transform: `translateX(calc(${vars.collapsed} * -70.75cqi))`,
+  },
 });

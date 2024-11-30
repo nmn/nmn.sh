@@ -1,0 +1,239 @@
+export const metadata = {
+  title: "Thoughts on Tailwind 4",
+  date: "2024-11-30",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "Some thoughts on the latest Tailwind release",
+};
+
+import { Container, Word } from "../../SlabTitle";
+
+<Container>
+  <Word scale={146}>Thoughts</Word>
+  <Word scale={39}>on</Word>
+  <Word scale={142}>Tailwind 4</Word>
+</Container>
+
+The Tailwind CSS v4.0 beta was [just released](https://tailwindcss.com/docs/v4-beta),
+and I wanted to share some thoughts on it. More specifically, I have some concerns
+that I have not seen covered elsewhere.
+
+Rather than provide any high level insight, let me address the various changes in
+Tailwind 4 individually.
+
+**DISCLAIMER**: These words are my own and do not represent the views of my employer.
+
+### The move to LightningCSS
+
+Moving to LightningCSS is a good move. The JS community is largely moving to rust-based
+tooling and being on LightningCSS will help keep Tailwind easy to integrate with various
+tools. The performance improvements are substantial, but not particularly important. Tailwind
+JIT was already fast enough.
+
+The biggest benefit of LightningCSS is the **unification** of Tailwind, imports and syntax lowerings.
+Not having to manually configure `Autoprefixr` is a big win.
+
+### CSS-first configuration
+
+There is much excitement about the CSS-first configuration. I don't think this as much of a
+slam dunk as many others. It has trade-offs. The big benefit is the need for one fewer boilerplate
+file for getting started.
+
+The downside is that most of the configuation is custom syntax specific to Tailwind and it's no
+longer type-safe. Hopefully tooling will help bridge this gap.
+
+In the meantime, Tailwind continues to support the old JS configuration by allowing you to import
+it in your CSS file.
+
+```css
+@config "../../tailwind.config.js";
+```
+
+Despite the trade-offs, I think this will end up proving to be a good move in the long run.
+
+### CSS theme variables
+
+This is where the concerns start. Architecturally, using _real_ CSS variables is an obvious win.
+However, in practice, using CSS variables can have some surprising performance pitfalls. The
+performance issues are inconsistent and when using a bunch of variables defined on `:root`, the
+impact seems to be minimal. However, re-assigining variables or definining variables on another
+element _in addition_ to `:root` can have a significant performance impact.
+
+So, as long most devs don't go overboard with custom scoped overrides for variables, things should
+be OK. It is also possible to configure to Tailwind to inline the variables in the CSS output, just
+like Tailwind 3 and earlier:
+
+```css
+@theme inline {
+  /* ... */
+  --color-black: #000;
+  --color-white: #fff;
+  /* ... */
+}
+```
+
+Most developers configure their themes _globally_ and scoped overrides for the variables
+is not a common use-case. So, I wonder if inlining variables would have been a better default.
+
+### Native CSS cascade layers
+
+This is an unmitigated sucess and an obvious win. My biggest surprise was to learn that this wasn't
+already the case. There are certain older browsers that don't support cascade layers, but it's a
+simple polyfill to fix that.
+
+### Simplified theme configuration
+
+A bunch of values that were previously configurable now just allow arbitrary values, such as `grid-cols-73`,
+without the need for `[73]`. This is a good move and removes unnecessary boilerplate and friction.
+
+### Some other obvious wins
+
+There's a few too many to mention individually, so here's some of the other obvious improvements:
+
+- Automatic source detection
+- Built-in `@import` support
+- Built-in CSS transpilation
+- Dynamic spacing scale
+- P3 colors.
+- Container Query support
+- 3D transforms (_finally_)
+
+And many others... If you want to read every new thing in Tailwind 4, they have some
+[great documentation](https://tailwindcss.com/docs/v4-beta). I'll limit my opinions to what I find
+_controversial_.
+
+### Gradients
+
+Tailwind 4 finally adds support for radial and conic gradients. While this is an obvious improvment,
+I think Tailwind has never handled gradients well. Defining gradients inline is problematic and the
+usage of CSS variables to do is problematic. Using `"from-indigo-500 via-blue-400 to-teal-300"` is
+not something that belongs on the HTML directly.
+
+Tailwind should ship with a set of predefined beautiful gradients that can be used out of the box and
+let developers define their own gradients in the config file.
+
+Still, this is not a new issue it has always been possible to not use these utilities and define
+gradients in the configuation file.
+
+### New `not-*` and `in-*` "variants"
+
+Tailwind has added support for `:not()` and `:hover *` with the new `not-*` and `in-*` variants.
+
+```html
+<button class="bg-indigo-600 hover:not-focus:bg-indigo-700">
+  <!-- ... -->
+</button>
+
+<div class="opacity-50 in-focus:opacity-100">
+  <!-- fill be opacity:1; when *within* a focused element -->
+</div>
+```
+
+These are good improvements and good way to maintain the guarantees of atomic styles.
+
+### The `inert-*` and `nth-*` variants
+
+These variants are _slightly_ problematic. They let you use `[inert]` and `:nth-child()` selectors
+in your classNames. This encourages the same bad practices that atomic CSS in general and Tailwind
+in particular has always discouraged.
+
+At least these variants do not encourage "styling at a distance", and so while they may result
+in CSS bloat, they will not be particularly harmful.
+
+### Descendant variants
+
+There are many celebrating this destruction of atomic CSS guarantees, but I think this is probably
+the most **harmful** addition to Tailwind. _Ever_.
+
+The `*` variant for tagetting direct children was already added and was problematic enough:
+
+```html
+<ul class="*:p-4">
+  <li>One</li>
+  <li>Two</li>
+  <li>Three</li>
+</ul>
+```
+
+This actively encourages "styling at a distance", but at least it was contained and limited to
+direct children. The new `**` variant ruins this completely:
+
+```html
+<div class="**:data-avatar:rounded-full">
+  <div>
+    <img src="…" data-avatar />
+    <!-- This element will be round -->
+  </div>
+  <p>…</p>
+</div>
+```
+
+Others see power, I see chaos. Tailwind has finally jumped the shark and has added essentially all of
+CSS into classNames. This is no longer atomic CSS, and developers will abuse the hell out of this
+and run into all of the terrible problems that Tailwind saved them from in the first place.
+
+There is still time, this **"feature"** should be rolled back before it's too late!
+
+## Other longstanding issues
+
+While I'm talking about Tailwind, let me also raise some longstanding concerns that I've had.
+
+### The classNames could be better
+
+Tailwind _usually_ has a "prefix" in the className to suggest the style being applied:
+
+- `bg-red-500` for `background-color`
+- `m-sm` for `margin`
+- `pt-4` for `padding-top`
+- etc.
+
+However, there are some classNames where the _style_ being applied isn't as obvious:
+
+- `flex` applies `display: flex;`
+- `grid` applies `display: grid;`
+- `text-` can apply `color` _or_ `font-size`
+
+In recent versions, this has become even more common with `grow` and `shrink` replacing
+`flex-grow` and `flex-shrink` respectively.
+
+While these changes are good for brevity, they can sometimes increase confusion and can
+have a significant impact on the code size and runtime cost of tools such as `tailwind-merge`.
+
+The Tailwind team tends to discourage the use `tailwind-merge` and expect all styles to be
+applied statically. However, IMO, this an unrealistic expectation almost every serious project
+that uses Tailwind ususally also uses `tailwind-merge`.
+
+I think Tailwind should make it easier for tools such as `tailwind-merge` to exist and be as
+performant as possible. As a side-effect, it might also make the styles easier and more consistent
+to read and work with.
+
+### The rampant usage of `rem` units
+
+It is easy to change the default theme but the default theme for Tailwind uses `rem` units for
+absolutely everything. From `font-size` to spacing, and from sizing to media queries. Designers
+_love_ this as this lets them maintain their previous proportions, but this actually an accessibility
+anti-pattern.
+
+When browsing a website, a user is able to control sizing in two ways:
+
+- Use page zoom
+- Change the default font size
+
+Using `rem` for spacing and sizing removes the ability of the user to change the default font size
+and makes it work like a second way to zoom instead. This is user-hostile and forces users you perhaps
+need slightly larger text to be able to read confortable to be forced into a layout made for smaller
+screens with less density.
+
+The solution to this problem is simple. The default values for spacing, sizing and media queries should
+all use `px` units and `rem` should be used exclusively for `font-size`.
+
+## Conclusion
+
+While this post happened to focus on the negatives, that is only because the postives are so obvious
+there isn't much to say. I'm very much nitpicking here, but given the massive popularity of Tailwind,
+I think it's important to provide constructive criticism and help improve the tool for the entire
+community.
+
+On my end, [`tw-to-stylex`](https://github.com/nmn/tw-to-stylex) has already been upgraded to use
+Tailwind 4 behind the scenes and I'm excited to take it even further and more feature rich.

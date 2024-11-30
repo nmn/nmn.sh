@@ -3,6 +3,7 @@ import * as stylex from "@stylexjs/stylex";
 import { spacing } from "../vars.stylex";
 import Logo from "../Logo";
 import Link from "next/link";
+import Nav from "../components/Nav";
 
 export const metadata: Metadata = {
   title: "Blog | Naman Goel",
@@ -17,9 +18,10 @@ export default function RootLayout({
   return (
     <>
       <header {...stylex.props(styles.header)}>
-        <Link href="/">
+        <Link {...stylex.props(styles.logoLink)} href="/">
           <Logo style={styles.logo} />
         </Link>
+        <Nav />
       </header>
       <main {...stylex.props(styles.main)}>{children}</main>
     </>
@@ -27,13 +29,19 @@ export default function RootLayout({
 }
 
 const styles = stylex.create({
+  logoLink: {
+    visibility: {
+      default: null,
+      "@media (max-width: 600px)": "hidden",
+    },
+  },
   header: {
     alignItems: "center",
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     marginBottom: spacing.xl,
-    padding: spacing.xs,
+    padding: spacing.sm,
   },
   logo: {
     width: 160,

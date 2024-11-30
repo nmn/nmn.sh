@@ -6,10 +6,7 @@
   babelPresets: [
     ["@babel/preset-typescript", { allExtensions: true, isTSX: true }],
   ],
-  babelPluginsPre: [
-    "babel-plugin-alias-config",
-    ["./node_modules/tailwind-to-stylex"],
-  ],
+  babelPluginsPre: ["babel-plugin-alias-config"],
   styleXConfig: {
     aliases: {
       "@/*": ["./source/*"],

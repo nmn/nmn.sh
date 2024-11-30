@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div>
       <header {...stylex.props(styles.header)}>
-        <Logo style={styles.logo} />
+        <Logo style={styles.logo} collapsible />
         <nav {...stylex.props(styles.nav)}>
           <Link {...stylex.props(styles.navLink)} href="/blog">
             Blog

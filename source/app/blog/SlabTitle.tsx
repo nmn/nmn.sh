@@ -8,7 +8,7 @@ export function Container({
   children: React.ReactNode;
   style?: stylex.StyleXStyles;
 }>) {
-  return <h1 {...stylex.props(styles.constainer, style)}>{children}</h1>;
+  return <h1 {...stylex.props(styles.container, style)}>{children}</h1>;
 }
 export function Word({
   children,
@@ -21,18 +21,19 @@ export function Word({
   italic?: boolean;
   offset: number;
 }>) {
-  const height = italic ? 21 + 10 : 21;
+  const height = 21;
+  const adjustedScale = scale;
   return (
-    <div {...stylex.props(styles.word(scale))}>
+    <div {...stylex.props(styles.word(adjustedScale))} data-italic={italic}>
       <div {...stylex.props(styles.wordInnerDiv)}>
         <svg
           {...stylex.props(styles.svg, italic && styles.italicSvg)}
-          viewBox={`0 0 ${scale} ${height}`}
+          viewBox={`0 0 ${adjustedScale} ${height}`}
         >
           <text
             {...stylex.props(styles.text, italic && styles.italic)}
             x={offset}
-            y={italic ? 30 : 20}
+            y={20}
           >
             {children}
           </text>
@@ -43,25 +44,29 @@ export function Word({
 }
 
 const styles = stylex.create({
-  constainer: {
+  container: {
     alignItems: "center",
     columnGap: spacing.xs,
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "center",
+    marginBottom: spacing.lg,
     marginInline: "auto",
-    maxWidth: "62rem",
+    maxWidth: "54rem",
     rowGap: 8,
     width: "100%",
   },
   word: (scale: number) => ({
+    color: {
+      default: colors.fg,
+      ":nth-child(2n of :not([data-italic]))": colors.secondary,
+    },
     flexBasis: 0,
     flexGrow: scale,
     margin: 0,
     minHeight: 32,
     minWidth: `calc(${scale + "px"} + ${scale} * 0.1vw)`,
     padding: 0,
-    textTransform: "uppercase",
   }),
   wordInnerDiv: {
     alignItems: "flex-start",
@@ -76,7 +81,8 @@ const styles = stylex.create({
     width: "100%",
   },
   italicSvg: {
-    marginTop: "-16%",
+    // marginInline: -5,
+    // marginTop: "-16%",
   },
   text: {
     fill: "currentColor",
@@ -84,14 +90,15 @@ const styles = stylex.create({
     fontSize: 28,
     letterSpacing: "-0.05em",
     lineHeight: 1,
+    textTransform: "uppercase",
   },
   italic: {
     color: colors.accent,
     fontFamily:
       "Baskerville, 'Baskerville Old Face', 'Palatino Linotype', serif",
-    fontSize: 33,
+    fontSize: 29,
     fontStyle: "italic",
     fontWeight: "lighter",
-    textTransform: "initial",
+    textTransform: null,
   },
 });

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import * as stylex from "@stylexjs/stylex";
-import { colors, fonts } from "@/app/vars.stylex";
+import { colors, fonts, spacing } from "@/app/vars.stylex";
 import ThemeControl from "./ThemeControl";
 import { Inter, Libre_Baskerville } from "next/font/google";
 
@@ -33,7 +33,7 @@ export default function RootLayout({
     <html {...stylex.props(styles.html)} lang="en">
       <ThemeControl style={styles.body}>
         {children}
-        <footer {...stylex.props(styles.footer)}>Coming Soon...</footer>
+        <footer {...stylex.props(styles.footer)}>All Rights Reserved.</footer>
       </ThemeControl>
     </html>
   );
@@ -59,7 +59,9 @@ const styles = stylex.create({
     fontFamily: fonts.sans,
   },
   footer: {
+    color: colors.surface1,
     fontFamily: fonts.sans,
+    marginTop: spacing.xl,
     paddingBlock: 32,
     textAlign: "center",
   },

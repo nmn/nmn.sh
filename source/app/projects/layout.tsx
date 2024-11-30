@@ -6,8 +6,8 @@ import Link from "next/link";
 import Nav from "../components/Nav";
 
 export const metadata: Metadata = {
-  title: "Talks | Naman Goel",
-  description: "Conference and other technical talks I've given.",
+  title: "Projects | Naman Goel",
+  description: "My various projects",
 };
 
 export default function RootLayout({
