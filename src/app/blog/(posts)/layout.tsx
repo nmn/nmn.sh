@@ -15,7 +15,7 @@ export default function RootLayout({
           {"← "}all posts
         </Link>
       </P>
-      {children}
+      <div>{children}</div>
     </>
   );
 }

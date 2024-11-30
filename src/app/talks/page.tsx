@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { H1 } from "../../mdx-components";
-import { globalTokens, spacing } from "@/app/vars.stylex";
+import { globalTokens, spacing } from "../vars.stylex";
 import TalkCard from "./TalkCard";
 import { talks } from "./Talk";
 

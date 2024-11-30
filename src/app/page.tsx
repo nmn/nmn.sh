@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import Logo from "./Logo";
 import Link from "next/link";
-import { spacing } from "@/app/vars.stylex";
+import { spacing } from "./vars.stylex";
 
 export default function Home() {
   return (

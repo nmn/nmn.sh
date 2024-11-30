@@ -1,0 +1,232 @@
+export const metadata = {
+  title: "Swift is a more convenient Rust",
+  date: "2023-10-02",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the Archive: Thoughts on Swift, while learning Rust",
+};
+
+import { Container, Word } from "../../SlabTitle";
+
+<a href="https://naman34.svbtle.com/swift-is-the-more-convenient-rust">
+  <Container>
+    <Word scale={84}>Swift</Word>
+    <Word scale={24.5}>is</Word>
+    <Word scale={21}>a</Word>
+    <Word scale={78}>more</Word>
+    <Word scale={172}>convenient</Word>
+    <Word scale={70}>Rust</Word>
+  </Container>
+</a>
+
+_(originally published on my [old blog](https://naman34.svbtle.com/swift-is-the-more-convenient-rust))_
+
+I've been learning Rust lately.
+
+Rust is one of the most loved languages out there, is fast, and has an amazing community. Rust invented the concept of ownership as a solution memory management issues without resorting to something slower like Garbage Collection or Reference Counting. But, when you don't need to be quite as low level, it gives you utilities such as `Rc`, `Arc` and `Cow` to do reference counting and "clone-on-right" in your code. And, when you need to go lower-level still, you can use the `unsafe` system and access raw C pointers.
+
+Rust also has a bunch of awesome features from functional languages like tagged enums, match expressions, first class functions and a powerful type system with generics.
+
+Rust has an LLVM-based compiler which lets it compile to native code and WASM.
+
+I've also been doing a bit of Swift programming for a couple of years now. And the more I learn Rust, the more I see a reflection of Swift. (I know that Swift stole a lot of ideas from Rust, I'm talking about my own perspective here).
+
+Swift, too, has awesome features from functional languages like tagged enums, match expressions and first-class functions. It too has a very powerful type system with generics.
+
+Swift too gives you complete type-safety without a garbage collector. By default, everything is a value type with "copy-on-write" semantics. But when you need extra speed you can opt into an ownership system and "move" values to avoid copying. And if you need to go even lower level, you can use the unsafe system and access raw C pointers.
+
+Swift has an LLVM-based compiler which lets it compile to native code and WASM.
+
+## Deja Vu?
+
+You're probably feeling like you just read the same paragraphs twice. This is no accident. Swift is extremely similar to Rust and has most of the same feature-set. But there is a very big difference is _perspective_. If you consider the default memory model, this will start to make a lot of sense.
+
+## Rust is bottom-up, Swift is top-down.
+
+Rust is a low-level systems language at heart, but it gives you the tools to go higher level. Swift starts at a high level and gives you the ability to go low-level.
+
+The most obvious example of this is the memory management model. Swift use value-types by default with `copy-on-write` semantics. This is the equivalent of using `Cow<>` for all your values in Rust. But defaults matter. Rust makes it easy to use "moved" and "borrowed" values but requires extra ceremony to use `Cow<>` values as you need to "unwrap" them `.as_mutable()` to actually use the value within. Swift makes these Copy-on-Write values easy to use and instead requires extra ceremony to use borrowing and moving instead. Rust is faster by default, Swift is simpler and easier by default.
+
+## Swift takes Rust's ideas and hides them in C-like syntax.
+
+Swift's syntax is a masterclass in taking awesome functional language concepts and hiding them in C-like syntax to trick the developers into accepting them.
+
+Consider `match` statements. This is what a match statement looks like in Rust:
+
+```rust
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+}
+```
+
+Here's how that same code would be written in Swift:
+
+```swift
+enum Coin {
+    case penny
+    case nickel
+    case dime
+    case quarter
+}
+func valueInCents(coin: Coin) -> Int {
+    switch coin {
+    case .penny: 1
+    case .nickel: 5
+    case .dime: 10
+    case .quarter: 25
+    }
+}
+```
+
+Swift doesn't have a `match` statement or expression. It has a `switch` statement that developers are already familiar with. Except this `switch` statement is actually not a `switch` statement at all. It's an expression. It doesn't "fallthrough". It does pattern matching. It's just a `match` expression with a different name and syntax.
+
+In fact, Swift treats `enums` as more than _just_ types and lets you put methods directly on it:
+
+```swift
+enum Coin {
+    case penny
+    case nickel
+    case dime
+    case quarter
+
+    func valueInCents() -> Int {
+        switch self {
+        case .penny: 1
+        case .nickel: 5
+        case .dime: 10
+        case .quarter: 25
+        }
+    }
+}
+```
+
+### Optional Types
+
+Rust doesn't have `null`, but it does have `None`. Swift has a `nil`, but it's really just a `None` in hiding. Instead of an `Option<T>`, Swift let's you use `T?`, but the compiler still forces you to check that the value is not `nil` before you can use it.
+
+You get the same safety with more convenience since you can do this in Swift with an optional type:
+
+```swift
+let val: T?
+
+if let val {
+  // val is now of type `T`.
+}
+```
+
+Also, you're not forced to wrap every value with a `Some(val)` before returning it. The Swift compiler takes care of that for you. A `T` will transparently be converted into a `T?` when needed.
+
+### Error Handling
+
+Rust doesn't have `try-catch`. Instead it has a `Result` type which contains the success and error types.
+
+Swift doesn't have a `try-catch` either, but it does have `do-catch` and you have to use `try` before calling a function that could throw. Again, this is just deception for those developers coming from C-like languages. Swift's error handling works exactly like Rust's behind the scenes, but it is hidden in a clever, familiar syntax.
+
+```swift
+func usesErrorThrowingFunction() throws {
+  let x = try thisFnCanThrow()
+}
+
+func handlesErrors() {
+  do {
+    let x = try thisFnCanThrow()
+  } catch err {
+    // handle the `err` here.
+  }
+}
+```
+
+This is very similar to how Rust let's you use `?` at the end of statements to automatically forward errors, but you don't have to wrap your success values in `Ok()`.
+
+## Rust's compiler catches problems. Swift's compiler solves some of them
+
+There are many common problems that Rust's compiler will catch at compile time and even suggest solutions for you. The example that portrays this well is self-referencing enums.
+
+Consider an enum that represents a tree. Since, it is a recursive type, Rust will force you to use something like `Box<>` for referencing a type within itself.
+
+```rust
+enum TreeNode<T> {
+    Leaf(T),
+    Branch(Vec<Box<TreeNode<T>>>),
+}
+```
+
+(You could also us `Box<Vec<TreeNode<T>>>` instead)
+
+This makes the problem explicit and forces you to deal with it directly. Swift is a little more, _automatic_.
+
+```swift
+indirect enum TreeNode<T> {
+    case leaf(T)
+    case branch([TreeNode<T>])
+}
+```
+
+**Note**: that you still have to annotate this `enum` with the `indirect` keyword to indicate that it is recursive. But once you've done that, Swift's compiler takes care of the rest. You don't have to think about `Box<>` or `Rc<>`. The values just work normally.
+
+## Swift is less "pure"
+
+Swift was designed to replace Objective-C and needed to be able to interface with existing code. So, it has made a lot of pragmatic choices that makes it a much less "pure" and "minimalist" language. Swift is a pretty big language compared to Rust and has many more features built-in. However, Swift is designed with "progressive disclosure" in mind which means that just as soon as you think you've learned the language a little more of the iceberg pops out of the water.
+
+Here are just _some_ of the language features:
+
+- Classes / Inhertence
+- async-await
+- async-sequences
+- actors
+- getters and setters
+- lazy properties
+- property wrappers
+- Result Builders (for building tree-like structures. e.g. HTML / SwiftUI)
+
+## Convenience has its costs
+
+Swift is a far easier language to get started and productive with. The syntax is more familiar and a lot more is done for you automatically. But this really just makes Swift a higher-level language and it comes with the same tradeoffs.
+
+By default, a Rust program is much faster than a Swift program. This is because Rust is fast by default, and _lets_ you be slow, while Swift is easy by default and _lets_ you be fast.
+
+Based on this, I would say both languages have their uses. Rust is better for systems and embedded programming. It's better for writing compilers and browser engines (Servo) and it's better for writing entire operating systems.
+
+Swift is better for writing UI and servers and some parts of compilers and operating systems. Over time I expect to see the overlap get bigger.
+
+## The “cross-platform” problem
+
+There is a perception that Swift is only a good language for Apple platforms. While this was once true, this is no longer the case and Swift is becoming increasingly a good cross-platform language. Hell, Swift even compiles to wasm, and the forks made by the swift-wasm team were merged back into Swift core earlier this year.
+
+Swift on Windows is being used by The Browser Company to share code and bring the Arc browser to windows. Swift on Linux has long been supported by Apple themselves in order to push “Swift on Server”. Apple is directly sponsoring the Swift on Server conference.
+
+This year Embedded Swift was also announced which is already being used on small devices like the Panic Playdate.
+
+Swift website has been highlighting many of these projects:
+
+- [Swift on Windows](https://www.swift.org/blog/swift-everywhere-windows-interop/)
+- [Embedded Swift](https://www.swift.org/blog/embedded-swift-examples/)
+- [Gnome apps with Swift on Linux](https://www.swift.org/blog/adwaita-swift/)
+- [Swift on Playdate](https://www.swift.org/blog/byte-sized-swift-tiny-games-playdate/)
+
+The browser company says that [Interoperability is Swift’s super power](https://speakinginswift.substack.com/p/interoperability-swifts-super-power).
+
+And the Swift project has been trying make working with Swift a great experience outside of XCode with projects like an open source LSP and funding the the VSCode extension.
+
+import { Tweet } from "react-tweet";
+
+<Tweet id="1805292580659413286" />
+
+## Swift is not a perfect language.
+
+Compile times are (like Rust) quite bad. There is some amount of feature creep and the language is larger than it should be. Not all syntax feels familiar. The [package ecosystem](https://swiftpackageindex.com/) isn’t nearly as rich as Rust.
+
+But the “Swift is only for Apple platforms” is an old and tired cliche at this point. Swift is already a cross-platform, ABI-stable language with no GC, automatic Reference Counting and the option to opt into ownership for even more performance. Swift packages increasingly work on Linux. Foundation was ported to Swift, open sourced and made open source. It’s still early days for Swift as a good, more convenient, Rust alternative for cross-platform development, but it is here now. It’s no longer a future to wait for.

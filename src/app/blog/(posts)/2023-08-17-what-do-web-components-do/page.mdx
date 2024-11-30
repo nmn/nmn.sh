@@ -1,0 +1,104 @@
+export const metadata = {
+  title: "What do Web Components do?",
+  date: "2023-08-17",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the archive: What is the feature set of Web Components?",
+};
+
+import { Container, Word } from "../../SlabTitle";
+
+<a href="https://naman34.svbtle.com/what-do-web-components-do">
+  <Container>
+    <Word scale={81}>What</Word>
+    <Word scale={21} italic>
+      {"do"}
+    </Word>
+    <Word scale={61}>Web</Word>
+    <Word scale={188}>Components</Word>
+    <Word scale={53.5}>Do?</Word>
+  </Container>
+</a>
+
+(_Originally published on [my old blog](https://naman34.svbtle.com/what-do-web-components-do)_)
+
+A trend I have seen recently is that people are making some extremely flawed arguments against React. And then, these same people hype up web components and their only argument is favour of Web Components is that "it's the platform", as if implying that Web Components can somehow replace React or a similar UI framework.
+
+One day I'm going to write a longer post taking apart some of the most flawed arguments, but first, I wanted to learn about Web Components themselves. What can they actually do?
+
+## What are Web Components?
+
+Web Components is a term used to describe three new features available in the web platform:
+
+1. Custom Elements
+2. Shadow DOM
+3. Template Element
+
+### Custom Elements
+
+Custom Elements are elements with a hyphen in their name which can be defined as subclasses of HTMLElement in Javascript, but what makes them useful over using simple HTML elements?
+
+After a lot of research, I think the answer comes down to the fact that they provide the ability to react to the following events:
+
+1. An element being "mounted"
+2. An element being "unmounted"
+3. An element getting new attributes and/or children
+
+Essentially, custom elements give you web-native equivalents of `componentDidMount`, `componentWillUnmount` and `componentWillReceiveProps`.
+
+These are all great features, but I don't think they should be limited to "custom elements". Sadly, the only way to listen to the same events for "regular" HTML elements is to MutationObserver which isn't the best when it comes to performance.
+
+### Shadow DOM
+
+Shadow DOM create a kind of black box inside a custom element. But from all I can find, the only real benefit of using Shadow DOM is to get style encapsulation, i.e. scoped styles.
+
+Scoped styles seem more useful than they actually are. In most cases you want to share styles across your entire web app rather creating little silos and duplicating the same styles over and over again. Instead they should only be used for special use-cases such as rendering user-styles in a way that won't accidentally leak out to the page itself.
+
+### Template Element
+
+The template element seems the least useful part of web components, but also the most inoffensive. It's just a new HTML tag that doesn't render anything. There might be some performance ramifications to using Template elements rather than strings, but it doesn't make much of a difference either way.
+
+The main benefit of the template at this point is to enable server-side rendering for Shadow DOM.
+
+### Web Components the Good Parts?
+
+New information may change my mind, but I'm this 🤏 close to writing a "Shadow DOM Considered Harmful" article! Custom Elements are great! They give you some nice events to handle UI updates manually. And there's not much to say about Template elements at all.
+
+But Shadow DOM just makes everything worse for no good reason. Scoped styling leads to inefficient duplication. Event handling and external styling becomes needless complicated. Server side rendering is literally impossible outside of Chrome. The only benefit? You can be sloppy with your CSS. We have many tools available to help with CSS. We don't need Shadow DOM most of the time.
+
+I hate to sound so lame (because the Sith are generally cooler than the Jedi), but in this case, it's better on the light-side of the force.
+
+### Are Web Components inherently Better?
+
+Web Components let you react to updates, but they don't have anything to help you actually update the content within your components. You would usually still need a library or framework to do that for you.
+
+So Web Components are some new primitives that can help you build a framework, they can't replace frameworks entirely.
+
+The frameworks that build on top of Web Components are using the "DOM" events provided by CustomElements to handle updates. Other frameworks, just use function calls. Using DOM events (which are events that call JS functions), signals (which are just JS functions) and Virtual DOM (which are just JS objects) are all part of "the platform".
+
+Web Components are just a newer part of the platform so they're worse on older browsers where you still need polyfills.
+
+The only real benefit Web Components provide is that they make it easy to use directly from HTML. But it's fairly simple to provide that capability for components built with any framework. You need a very _light_ web component wrapper around it. And, yes, this is possible with _all_ popular frameworks, even React.
+
+### Are Web Components inherently faster?
+
+No. If you look at the benchmark, Solid and Svelte are both usually faster than the fastest Web Component based framework Lit. Further, to get an apples to apples comparison, you can see that LitHTML without Web Components are actually slightly faster than LitHTML with Web Components. (Side note: Lit HTML is a very cool on it's own!) The web component part of Lit should really be an optional piece that only makes sense when packaging up components to be used in mostly static HTML pages.
+
+### Are Web Component "framework-agnostic"?
+
+Not really. If you think about it, components built in _all_ frameworks can be used within a different framework. I've used React within Angular and Angular within React. D3, ThreeJS and ChartJS have all been used within React. You can render Solid within React and React within Solid. There's nothing really stopping you from mixing and matching frameworks.
+
+You usually need some glue code, but that can be abstracted into a library. Web components do give you a unified API for that glue code, but that's about where the benefits end. The real reason people avoid mixing frameworks is to avoid the overhead of multiple framework runtimes.
+
+So what _really_ makes a component is if it's lightweight. This means that Svelte and Solid are good options as they have fairly small runtimes. When it comes to Web Components, it really depends on the framework used to implement them. Something like Lit is fairly lightweight and is a good candidate. But this is not about Web Components, but the frameworks used.
+
+### Can Web Components be used to build a good framework?
+
+Yes! There's nothing inherently wrong with custom elements. Using the light DOM, SSR is fairly easy and a framework can be fairly lightweight by leveraging the built-in events. At the same time, there are some significant trade-offs that come from using the DOM instead of javascript. DOM attributes can only be strings, and "children" can only be DOM nodes. Web Components actually makes it _harder_ to pass objects, arrays and functions in components.
+
+This leads to framework design with less power and expressiveness, which are a good fit for light weight use-cases. It's all about trade-offs and how well the technology suits certain needs.
+
+### We need more nuance
+
+The discourse in the Javascript community is down in the dumps. It's just fanboys and flamewars on all sides. React, Preact, Solid, Svelte, Qwik, Lit, Astro, are all doing very interesting things. But they all make different trade-offs. Some are clearly better for smaller apps as they have smaller runtimes. Some, like React, only have features that only make sense for huge apps, (like concurrent rendering).

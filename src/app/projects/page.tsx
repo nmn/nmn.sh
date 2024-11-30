@@ -1,7 +1,7 @@
 import * as stylex from "@stylexjs/stylex";
 import { H1, P } from "../../mdx-components";
 
-import { colors } from "@/app/vars.stylex";
+import { colors } from "../vars.stylex";
 
 export default function Home() {
   return (

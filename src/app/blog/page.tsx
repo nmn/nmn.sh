@@ -8,7 +8,7 @@ import * as runtime from "react/jsx-runtime";
 // import * as provider from "@mdx-js/react";
 import { evaluate } from "@mdx-js/mdx";
 import { unstable_cache } from "next/cache";
-import { colors, fonts, spacing, text } from "@/app/vars.stylex";
+import { colors, fonts, spacing, text } from "../vars.stylex";
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -69,10 +69,7 @@ const getBlogPosts = unstable_cache(async () => {
 });
 
 export default async function Home() {
-  // read all subdirectories in the blog directory
-
   const posts = await getBlogPosts();
-  console.log(posts);
   const publishedPosts = posts.filter((post) => post.published);
 
   return (

@@ -1,0 +1,52 @@
+export const metadata = {
+  title: "The Imperfect Solution",
+  date: "2023-10-02",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the Archive: Defending Tailwind. Despite its flaws.",
+};
+
+# [The Imperfect Solution](https://pdx.su/blog/2023-07-26-tailwind-and-the-death-of-craftsmanship/)
+
+I saw this article by Jeff Sandberg railing against Tailwind. I'm no fan of Tailwind myself, but the article reeked of elitism and gatekeeping. I don't think Jeff (or anyone else railing against Tailwind) is doing this on purpose, so I will try to counter with my own arguments:
+
+> developers are throwing away decades of carefully wrought systems for a bit of perceived convenience.
+
+The words "perceived convenience" implies that Tailwind doesn't bring any actual convenience, but this is measurably false. For all its faults, Tailwind does many developers faster and provides _actual_ convenience.
+
+> Tools such as Tailwind CSS seem to be spreading like wildfire, with very few people ever willing to acknowledge the regression they bring to our field.
+
+I would argue that Tailwind isn't causing a "regression" here. Developers have _long_ had trouble understanding how CSS works. Pick any time since the birth of CSS and you will see developers hating on CSS because they don't understand it. Websites have been bogged down by huge, complicated CSS for decades. Tailwind gives such developers a way to write mediocre styles instead of catastrophically bad styles.
+
+> The problem I have with tailwind is that it reduces your HTML to a gigantic pile of near-gibberish CSS classes.
+
+This is a fair critique but also irrelevant. We always say that UX is more important than DX. And so if a tool like Tailwind lets developers ship fast, minimal CSS at the cost of messy HTML, it's a worthy tradeoff. Could you do better? Probably. But most developers, who have always struggled with CSS selectors would probably end up doing much worse!
+
+> Tooling is utterly broken by tailwind
+
+Tooling can be fixed. We can build dev-tools extensions and if atomic styles becomes successful enough, browsers will probably adapt.
+
+> ... a bunch of problems with Tailwind enumerated
+
+I actually don't have a problem with any of this. I agree that Tailwind is a leaky abstraction with many issues.
+
+> What's the alternative? Scoped CSS and component based design.
+
+Scoped CSS helps with correctness, but it doesn't help with performance. Scoped styles means that every component needs to ship its own styles. So, as the number of components you write grows, the amount of styles grow too. There is little to no style re-use.
+
+Then there's the fact that, today, scoped styles are either possible using Shadow DOM, or using other tooling. Both those solutions have their own problems, but I would argue that Shadow DOM has way _more_ problems than a long list of classNames in HTML.
+
+Atomic styles already solve all of these problems and there are ways to generate atomic styles that aren't leaky like Tailwind. PandaCSS and Tamagui are two such examples. (Soon there will be StyleX)
+
+> The CSS tailwind generates might not be bloated, but repeating the gigantic strings of classes all over your codebase certainly adds to the size of the final HTML output.
+
+When it comes to performance, this is right tradeoff to make. HTML is the cheapest bytes you can ship to a browser. The alternative is to have bigger CSS files which you're then forced to lazy-load. Every time you load CSS on a page, the browser has to invalidate _all_ styles. Loading more HTML on a page without a change to the CSS is much faster.
+
+## Tailwind isn't the only way to write Atomic Styles
+
+The core of my problem with the article is that it conflates Tailwind with Atomic Styles. Tailwind has many problems but it has become popular for a reason. Developers find Tailwind simpler and easier because it frees them from having to carefully manage the issues of specificity and selectors and choosing colours. Tailwind is _convenient_.
+
+Tailwind is also _fast_ because it uses Atomic Styles.
+
+Perhaps in the future, when declarative shadow DOM is commonplace and loading unique CSS for every component stops being a bottleneck, scoped styles will make more sense. But until then, the only thing better than Tailwind is a better way to generate Atomic Styles.

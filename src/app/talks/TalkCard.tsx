@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import * as stylex from "@stylexjs/stylex";
-import { colors, spacing, text } from "@/app/vars.stylex";
+import { colors, spacing, text } from "../vars.stylex";
 import type { Talk } from "./Talk";
 import { H4, P } from "../../mdx-components";
 

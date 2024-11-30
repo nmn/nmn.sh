@@ -3,10 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "stylex --config ./.stylex.dev.json5",
-    "dev": "stylex --config ./.stylex.dev.json5 -w & next dev --turbopack",
-    "build": "stylex --config ./.stylex.json5 && next build",
-    "prestart": "stylex --config ./.stylex.json5 && next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,17 +12,20 @@
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.0.3",
-    "@stylexjs/stylex": "^0.10.0-beta.1",
+    "@stylexjs/stylex": "^0.10.0-beta.2",
     "@types/mdx": "^2.0.13",
     "bright": "^0.8.5",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-tweet": "^3.2.1"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.26.0",
-    "@stylexjs/cli": "^0.10.0-beta.1",
-    "@stylexjs/eslint-plugin": "^0.10.0-beta.1",
+    "@babel/runtime": "^7.26.0",
+    "@stylexjs/babel-plugin": "^0.10.0-beta.2",
+    "@stylexjs/eslint-plugin": "^0.10.0-beta.2",
+    "@stylexjs/postcss-plugin": "^0.10.0-beta.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

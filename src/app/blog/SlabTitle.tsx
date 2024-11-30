@@ -21,7 +21,7 @@ export function Word({
   italic?: boolean;
   offset: number;
 }>) {
-  const height = 21;
+  const height = 22;
   const adjustedScale = scale;
   return (
     <div {...stylex.props(styles.word(adjustedScale))} data-italic={italic}>
@@ -33,7 +33,7 @@ export function Word({
           <text
             {...stylex.props(styles.text, italic && styles.italic)}
             x={offset}
-            y={20}
+            y={21}
           >
             {children}
           </text>
@@ -87,6 +87,7 @@ const styles = stylex.create({
   text: {
     fill: "currentColor",
     fontFamily: "var(--font-inter)",
+    fontWeight: 800,
     fontSize: 28,
     letterSpacing: "-0.05em",
     lineHeight: 1,

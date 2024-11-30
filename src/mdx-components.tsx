@@ -116,6 +116,15 @@ export function Ul({
   return <ul {...stylex.props(styles.text, styles.p, xstyle)} {...props} />;
 }
 
+export function Ol({
+  xstyle,
+  className: _cn,
+  style: _style,
+  ...props
+}: WithStyles<HTMLUListElement>) {
+  return <ol {...stylex.props(styles.text, styles.p, xstyle)} {...props} />;
+}
+
 export function Li({
   xstyle,
   className: _cn,
@@ -166,6 +175,15 @@ export function InlineCode({
   return <code {...stylex.props(styles.inlineCode, xstyle)} {...props} />;
 }
 
+export function Img({
+  xstyle,
+  className: _cn,
+  style: _style,
+  ...props
+}: WithStyles<HTMLImageElement>) {
+  return <img {...stylex.props(styles.img, xstyle)} {...props} />;
+}
+
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
@@ -179,10 +197,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     pre: Pre,
     code: InlineCode,
     ul: Ul,
+    ol: Ol,
     li: Li,
     a: A,
     strong: Strong,
     em: Em,
+    img: Img,
   };
 }
 
@@ -207,7 +227,7 @@ const styles = stylex.create({
   h2: {
     color: colors.mauve,
     fontSize: text.h2,
-    fontWeight: 300,
+    fontWeight: 700,
     lineHeight: 1,
     marginTop: {
       default: "1em",
@@ -217,7 +237,7 @@ const styles = stylex.create({
   h3: {
     color: colors.red,
     fontSize: text.h3,
-    fontWeight: 400,
+    fontWeight: 500,
     lineHeight: 1.2,
     marginTop: {
       default: "1em",
@@ -229,7 +249,7 @@ const styles = stylex.create({
     fontWeight: 600,
     lineHeight: 1.4,
     marginTop: {
-      default: "0.25em",
+      default: "1em",
       ":first-child": 0,
     },
   },
@@ -238,7 +258,7 @@ const styles = stylex.create({
     fontWeight: 700,
     lineHeight: 1.5,
     marginTop: {
-      default: "0.25em",
+      default: "1em",
       ":first-child": 0,
     },
   },
@@ -247,7 +267,7 @@ const styles = stylex.create({
     fontWeight: 800,
     lineHeight: 1.6,
     marginTop: {
-      default: "0.5em",
+      default: "1em",
       ":first-child": 0,
     },
   },
@@ -295,7 +315,7 @@ const styles = stylex.create({
     color: colors.blue,
     textDecorationColor: {
       default: colors.overlay0,
-      ":focus-visible": colors.blue,
+      ":focus": colors.blue,
       ":hover": colors.blue,
     },
     textDecorationSkipInk: "all",
@@ -304,4 +324,9 @@ const styles = stylex.create({
   },
   strong: { color: colors.teal },
   em: { color: colors.peach },
+  img: {
+    display: "block",
+    marginInline: "auto",
+    maxWidth: "100%",
+  },
 });

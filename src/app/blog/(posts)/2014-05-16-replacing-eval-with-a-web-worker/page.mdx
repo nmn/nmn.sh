@@ -1,0 +1,129 @@
+export const metadata = {
+  title: "Replacing Eval with a Web Worker",
+  date: "2014-05-16",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the archive: Using a web worker instead of eval()",
+};
+
+# Replacing Eval with a Web Worker
+
+Originally published [on naman34.svbtle.com](https://naman34.svbtle.com/replacing-eval-with-a-web-worker)
+
+Eval is Evil. Douglas Crockford has made that so popular that any competent Javascript developer thinks twice before actually using eval. But when do we even need to use eval?
+
+Sometime we need to actually affect the webpage by evaluating a string. Those are cases when there is no way around eval. However, in most cases, eval is usually used for testing, and providing an interactive coding experience in the browser for tutorials, demos and the like.
+
+I recently ran into the problem while developing [Imprezzive](http://scribbler-prelaunch-9084.onmodulus.net). Imprezzive is a modern web-based presentation framework that has been tailored especially for real-time editing and collaboration and sharing code samples.
+
+[![Screen Shot 2014-05-16 at 4.40.48 PM.png](https://svbtleusercontent.com/jrrtyhyjsw4dza_small.png)](https://svbtleusercontent.com/jrrtyhyjsw4dza.png)
+
+One of the things I wanted to accomplish with Imprezzive was to provide a text editor within the slides where you could actually run the code and see the results. This is very useful for presenting code samples and showing off what they do. Also, as code editors were just floating elements like any other element, It was also possible to compare and contrast multiple approaches to a problem and determine their correctness and performance.
+
+[![Screen Shot 2014-05-16 at 4.38.25 PM.png](https://svbtleusercontent.com/bqdcncvzs9ctlg_small.png)](https://svbtleusercontent.com/bqdcncvzs9ctlg.png)
+
+I solved this by using the [Ace Editor](http://ace.c9.io/) with a custom theme that complemented my Tron-inspired presentation theme. I also added a mini-console under every Ace editor with a ‘Run Code’ button. A run code button is exactly the place where a developer would be tempted to use eval. I was too. But I remembered the wise words of Crockford.
+
+[![good_vs_eval.jpg](https://svbtleusercontent.com/f9imayjtiyhq5a_small.jpg)](https://svbtleusercontent.com/f9imayjtiyhq5a.jpg)
+
+I decided to do what eval does, but safely, in a web worker. A web worker has many benefits:
+
+- It runs on a separate thread that keeps your UI thread safe from buggy code and slowdowns.
+- It can throw errors safely
+- It has a relatively [good browser support](http://caniuse.com/#search=web%20workers).
+
+However, it does have a few drawbacks. Web Workers run in their own context and have no access to the window object. As a results, code running in a web worker has no access to common ways we test code, such as alert, and the various methods on console.
+
+It turns out, it's very easy to ‘polyfill’ these methods in the web worker, and just stream the results back to the main thread. As an extra precaution, you should have some sort of run-time limit on the web worker, so you save yourself from infinite loops, even if they are on a separate thread.
+
+```js
+var window = {};
+window.alert = function () {
+  console.log.apply(
+    console,
+    ["Alert: "].concat(Array.prototype.slice.call(arguments))
+  );
+};
+var alert = window.alert;
+var console = {
+  log: function () {
+    var str = "";
+    for (var i = 0; i < arguments.length; i++) {
+      str += JSON.stringify(arguments[i]) + " ";
+    }
+    str += "\n";
+    // send the message back to the main thread
+    self.postMessage(str);
+  },
+  error: function () {
+    console.log.apply(
+      console,
+      ["ERROR: "].concat(Array.prototype.slice.call(arguments))
+    );
+  },
+  warn: function () {
+    console.log.apply(
+      console,
+      ["WARNING: "].concat(Array.prototype.slice.call(arguments))
+    );
+  },
+};
+self.addEventListener(
+  "message",
+  function (e) {
+    // your code from the editor goes here
+  },
+  false
+);
+```
+
+This is the code that runs in your web worker. If you knew what the code would be running in advance, you could just this as a separate file and just run it without issues. However, one cool thing about Web Workers is that you can prepare a javascript _string_ in your UI thread and just run it in a web worker. The process is simple enough, but there are a few steps involved. Here is the code I for Imprezzive.
+
+```js
+// Prepate the javascript String,
+// by adding the parts before and after the user code.
+var code = this.worker.start + this.editor.getValue() + this.worker.end;
+// This is basically the previous code block in string form
+
+// prepare the string into an executable blob
+var bb = new Blob([code], {
+  type: "text/javascript",
+});
+
+// convert the blob into a pseudo URL
+var bbURL = URL.createObjectURL(bb);
+
+// Prepare the worker to run the code
+var worker = new Worker(bbURL);
+
+// add a listener for messages from the Worker
+worker.addEventListener(
+  "message",
+  function (e) {
+    var string = e.data.toString();
+    this.$el.find(".console").append("<p>" + string + "</p>");
+  }.bind(this)
+);
+
+// add a listener for errors from the Worker
+worker.addEventListener("error", function (e) {
+  var string = e.message.toString();
+  that.$el.find(".console").append("<p> ERROR: " + string + "</p>");
+});
+
+// Finally, actually start the worker
+worker.postMessage("start");
+
+// Put a timeout on the worker to automatically kill the worker
+setTimeout(function () {
+  worker.terminate();
+  worker = null;
+}, 10000);
+```
+
+One important piece of the solution was the `setTimeout` at the end of the code. Just in case the user runs some code that ends up in an endless loop, we can kill the process, and save the computer from unnecessary work.
+
+There are more edge cases that should be put in for a production system. For example, you should probably listen for an event that fires when the code finishes running and have special message in the console if the code had to be terminated early.
+
+I hope this provided an easy way to use Web Workers effectively to run arbitrary code. However, Web Workers are powerful tools that can also be used in different contexts.

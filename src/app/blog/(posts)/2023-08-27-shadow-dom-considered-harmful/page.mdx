@@ -1,0 +1,72 @@
+export const metadata = {
+  title: "Shadow DOM considered harmful",
+  date: "2023-08-27",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the archive: Why Shadow DOM is a bad idea",
+};
+
+import { Container, Word } from "../../SlabTitle";
+
+<a href="https://naman34.svbtle.com/shadow-dom-considered-harmful">
+  <Container>
+    <Word scale={122}>Shadow</Word>
+    <Word scale={63}>DOM</Word>
+    <Word scale={168}>considered</Word>
+    <Word scale={128}>harmful</Word>
+  </Container>
+</a>
+
+(_Originally published on [my old blog](https://naman34.svbtle.com/shadow-dom-considered-harmful)_)
+
+I was going to write an article about how Shadow DOM has been a horrible idea and here comes Manuel Matuzovic with [an article](https://www.matuzo.at/blog/2023/pros-and-cons-of-shadow-dom/) that lays out exactly what's wrong with it.
+
+The article is balanced and well considered, so I'm going to feel free to be more unhinged and not mince my words when I say that Shadow DOM has been actively harmful to the web.
+
+Let's consider the 3 “pros” mentioned by Manuel.
+
+- Style Encapsulation
+- DOM Encapsulation
+- Slots
+
+### Style Encapsulation
+
+This is arguably the most useful part of Shadow DOM today and it is already not what most developers wanted when they asked for “scoped CSS”.
+
+Usually, we want global styles to apply to our components. What we don't want is styles that are only meant for our components from leaking _out_.
+
+CSS will soon add [true scoped selectors](https://www.bram.us/2023/08/22/a-quick-introduction-to-css-scope/) to CSS which is what we have wanted this whole time.
+
+All the work and heavy-handed promoting of web components and shadow DOM meant that work on the truly useful scoped CSS was de-prioritised. Shadow DOM has been harmful to the web and held us back.
+
+(Btw, `all: initial` already exists in CSS if we want to avoid inheriting global styles.)
+
+### DOM Encapsulation
+
+I remember when the `<video>` element and other html 5 elements were introduced people complained about how hard it was to style the various elements within.
+Developers hated how these new HTML elements would hide what they actually rendered. (Let's not even start talking about `<select>`)
+We had to add a bunch of pseudo elements just to be able to style _buttons_ within a video element.
+
+The solution offered by web components? Let's make _all_ components hide their HTML. Now we need to manually expose those part using `::part` selectors. We are forced to write lots and lots of duplicate CSS just to be able to style the paragraphs tags in shadow DOM trees of different custom elements.
+
+Oh, and yeah it also break DOM traversal and events.
+
+There are use cases when we need true encapsulation. We already had `<iframe>` (or `<object>`?) for those use cases. All we needed was a way to set `size=auto`. Again this is something that finally being discussed again after many years. The flawed and complicated solution of shadow DOM meant work on better solutions was de-prioritised.
+
+### Slots
+
+Slots are a nice feature for web components and there are ways to achieve them without the need for shadow DOM at all.
+
+All we need is a way to pass HTML to a component in a way that puts the component in control of how to render it. There are many ways to do so. The simplest solution is probably to use `<template>` tags which can be read by the custom elements without rendering anything by default.
+
+### Opportunity Cost
+
+People often wonder why developers using JS-frameworks are so angry about web components.
+
+Apart from all the gaslighting by the DevRel team at Google, it's how all these deeply flawed APIs were rammed down our throats at the cost of thing we were asking for.
+
+Web component apologists will often point to their usage in large projects as some kind of evidence of their success. Of course we're forced to use what the platform actually gives us. If ShadowDOM is the only way to get scoped styles, what other choice do we have?
+We use all the terrible old APIs built into DOM too. That doesn't mean they're good APIs. It's just what we're stuck with since we don't remove APIs and break the web.
+
+Web Components are a good idea. Adding new browser APIs for encapsulation is a good idea. But Shadow DOM and Google's tone deaf, non-collaborative approach to shoving half-baked idea into the spec has forever ruined our chances of having better solutions instead and held back better idea from coming to fruition. (Many from within Google itself).

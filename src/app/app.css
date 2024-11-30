@@ -1,0 +1,17 @@
+@layer reset {
+  :root {
+    --font-inter: "Inter", "Impact", sans-serif;
+    --font-baskerville: "Baskerville", "Garamond", serif;
+  }
+
+  html,
+  body {
+    margin: 0;
+  }
+}
+
+@stylex;
+
+.react-tweet-theme {
+  margin-inline: auto !important;
+}

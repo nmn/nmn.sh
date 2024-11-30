@@ -1,7 +1,7 @@
 import React from "react";
 import * as stylex from "@stylexjs/stylex";
 import Link from "next/link";
-import { spacing } from "@/app/vars.stylex";
+import { spacing } from "../vars.stylex";
 
 export function Nav() {
   return (
