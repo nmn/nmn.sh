@@ -245,6 +245,7 @@ const styles = stylex.create({
     },
   },
   h4: {
+    color: colors.teal,
     fontSize: text.h4,
     fontWeight: 600,
     lineHeight: 1.4,
@@ -287,6 +288,7 @@ const styles = stylex.create({
     borderRadius: spacing.xxs,
     maxWidth: "calc(54rem + 36px)",
     overflow: "hidden",
+    fontSize: text.p,
   },
   code: {
     borderColor: `color-mix(in oklch, ${colors.green}, transparent 75%)`,

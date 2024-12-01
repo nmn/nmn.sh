@@ -3,12 +3,32 @@ import { colors, spacing } from "../vars.stylex";
 
 export function Container({
   children,
+  href,
   style,
 }: Readonly<{
   children: React.ReactNode;
+  href?: string;
   style?: stylex.StyleXStyles;
 }>) {
-  return <h1 {...stylex.props(styles.container, style)}>{children}</h1>;
+  const el = (
+    <h1
+      {...stylex.props(
+        styles.container,
+        href != null && styles.containerInLink,
+        style
+      )}
+    >
+      {children}
+    </h1>
+  );
+  if (href != null) {
+    return (
+      <a {...stylex.props(styles.link)} href={href}>
+        {el}
+      </a>
+    );
+  }
+  return el;
 }
 export function Word({
   children,
@@ -44,6 +64,13 @@ export function Word({
 }
 
 const styles = stylex.create({
+  link: {
+    display: "block",
+    marginBottom: spacing.lg,
+    marginInline: "auto",
+    maxWidth: "54rem",
+    width: "100%",
+  },
   container: {
     alignItems: "center",
     columnGap: spacing.xs,
@@ -56,10 +83,14 @@ const styles = stylex.create({
     rowGap: 8,
     width: "100%",
   },
+  containerInLink: {
+    marginBottom: 0,
+  },
   word: (scale: number) => ({
     color: {
       default: colors.fg,
-      ":nth-child(2n of :not([data-italic]))": colors.secondary,
+      ":nth-child(3n + 2 of :not([data-italic]))": colors.surface2,
+      ":nth-child(3n + 3 of :not([data-italic]))": colors.text,
     },
     flexBasis: 0,
     flexGrow: scale,
@@ -94,7 +125,7 @@ const styles = stylex.create({
     textTransform: "uppercase",
   },
   italic: {
-    color: colors.accent,
+    color: colors.maroon,
     fontFamily:
       "Baskerville, 'Baskerville Old Face', 'Palatino Linotype', serif",
     fontSize: 29,
