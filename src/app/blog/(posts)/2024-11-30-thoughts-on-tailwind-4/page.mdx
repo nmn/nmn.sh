@@ -7,12 +7,16 @@ export const metadata = {
   description: "Some thoughts on the latest Tailwind release",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-<Container>
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
   <Word scale={147}>Thoughts</Word>
   <Word scale={39}>on</Word>
-  <Word scale={146.5}>Tailwind 4</Word>
+  <Word scale={125}>Tailwind</Word>
+  <Word scale={18.5}>4</Word>
 </Container>
 
 The Tailwind CSS v4.0 beta was [just released](https://tailwindcss.com/docs/v4-beta),

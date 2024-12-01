@@ -7,9 +7,15 @@ export const metadata = {
   description: "From the Archive: Defending Tailwind. Despite its flaws.",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-<Container href="https://pdx.su/blog/2023-07-26-tailwind-and-the-death-of-craftsmanship/">
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container
+  href="https://pdx.su/blog/2023-07-26-tailwind-and-the-death-of-craftsmanship/"
+  path={__dirname}
+>
   <Word scale={52.5}>The</Word>
   <Word scale={147}>Imperfect</Word>
   <Word scale={131}>Solution</Word>

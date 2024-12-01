@@ -1,5 +1,5 @@
 import * as stylex from "@stylexjs/stylex";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { P } from "../../../mdx-components";
 import { spacing } from "../../vars.stylex";
 
@@ -36,6 +36,7 @@ const styles = stylex.create({
     textUnderlineOffset: "6px",
   },
   p: {
+    marginTop: spacing.xxxl,
     marginBottom: spacing.xxs,
   },
 });

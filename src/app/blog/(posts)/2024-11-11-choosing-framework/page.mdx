@@ -8,9 +8,12 @@ export const metadata = {
     "Before you start debating whether React is better than Vue, or Angular is better than Svelte, remember that there is no best framework.",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-<Container>
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
   <Word scale={82}>There</Word>
   <Word scale={24}>is</Word>
   <Word scale={40}>no</Word>

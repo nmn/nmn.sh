@@ -1,15 +1,45 @@
 import * as stylex from "@stylexjs/stylex";
 import { colors, spacing } from "../vars.stylex";
+import React from "react";
 
 export function Container({
+  path,
   children,
   href,
   style,
 }: Readonly<{
+  path: string;
   children: React.ReactNode;
   href?: string;
   style?: stylex.StyleXStyles;
 }>) {
+  const safePath = path.split("/").pop();
+  const wordCounts: { [key: string]: number } = {};
+  const childrenWithNames = React.Children.map(children, (child, i) => {
+    if (
+      child != null &&
+      typeof child === "object" &&
+      "type" in child &&
+      child.type === Word
+    ) {
+      let word = child.props.children;
+      if (typeof word !== "string") {
+        return child;
+      }
+      word = word.toLocaleLowerCase().replace(/[^a-z0-9\s-_]/g, "");
+      const count = wordCounts[word] ?? 0;
+      wordCounts[word] = (wordCounts[word] ?? 0) + 1;
+
+      return React.cloneElement(child, {
+        key: child.key ?? i,
+        xstyle: styles.viewTransitionName(
+          "_" + safePath + "________" + word + (count > 0 ? "___" + count : "")
+        ),
+      });
+    }
+    return child;
+  });
+
   const el = (
     <h1
       {...stylex.props(
@@ -18,7 +48,7 @@ export function Container({
         style
       )}
     >
-      {children}
+      {childrenWithNames}
     </h1>
   );
   if (href != null) {
@@ -35,16 +65,21 @@ export function Word({
   scale,
   italic,
   offset = 0,
+  xstyle,
 }: Readonly<{
   children: string;
   scale: number;
   italic?: boolean;
   offset: number;
+  xstyle?: stylex.StyleXStyles;
 }>) {
   const height = 22;
   const adjustedScale = scale;
   return (
-    <div {...stylex.props(styles.word(adjustedScale))} data-italic={italic}>
+    <div
+      {...stylex.props(styles.word(adjustedScale), xstyle)}
+      data-italic={italic}
+    >
       <div {...stylex.props(styles.wordInnerDiv)}>
         <svg
           {...stylex.props(styles.svg, italic && styles.italicSvg)}
@@ -71,13 +106,16 @@ const styles = stylex.create({
     maxWidth: "54rem",
     width: "100%",
   },
+  viewTransitionName: (name: string) => ({
+    viewTransitionName: name,
+  }),
   container: {
     alignItems: "center",
     columnGap: spacing.xs,
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "center",
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xxxxl,
     marginInline: "auto",
     maxWidth: "54rem",
     rowGap: 8,

@@ -25,58 +25,126 @@ function transformChildren(children: React.ReactNode): React.ReactNode {
   });
 }
 
-export function H1({
-  xstyle,
-  className: _cn,
-  style: _style,
-  ...props
-}: WithStyles<HTMLHeadingElement>) {
-  return <h1 {...stylex.props(styles.text, styles.h1, xstyle)} {...props} />;
+function normalizeSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-_]/g, "") // remove special characters
+    .trim()
+    .replace(/\s+/g, "-"); // replace spaces with hyphens
 }
 
-export function H2({
-  xstyle,
-  className: _cn,
-  style: _style,
-  ...props
-}: WithStyles<HTMLHeadingElement>) {
-  return <h2 {...stylex.props(styles.text, styles.h2, xstyle)} {...props} />;
+function getSlug(children: React.ReactNode): string {
+  return normalizeSlug(
+    React.Children.toArray(children)
+      .map((child) => {
+        if (typeof child === "string") {
+          return child;
+        }
+        return "";
+      })
+      .join("")
+  );
 }
 
-export function H3({
+export function Heading({
+  level,
   xstyle,
   className: _cn,
   style: _style,
+  children,
   ...props
-}: WithStyles<HTMLHeadingElement>) {
-  return <h3 {...stylex.props(styles.text, styles.h3, xstyle)} {...props} />;
+}: WithStyles<HTMLHeadingElement> & { level: 1 | 2 | 3 | 4 | 5 | 6 }) {
+  const Component = `h${level}`;
+  const slug = getSlug(children);
+  return (
+    <a {...stylex.props(styles.headingLink)} id={slug} href={`#${slug}`}>
+      <Component
+        {...stylex.props(styles.text, styles.heading, xstyle)}
+        {...props}
+      >
+        <span {...stylex.props(styles.headingHash)}>#</span>
+        {transformChildren(children)}
+      </Component>
+    </a>
+  );
 }
 
-export function H4({
-  xstyle,
-  className: _cn,
-  style: _style,
-  ...props
-}: WithStyles<HTMLHeadingElement>) {
-  return <h4 {...stylex.props(styles.text, styles.h4, xstyle)} {...props} />;
+export function H1({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return (
+    <h1
+      {...stylex.props([styles.text, styles.heading, styles.h1, xstyle])}
+      {...props}
+    />
+  );
 }
 
-export function H5({
-  xstyle,
-  className: _cn,
-  style: _style,
-  ...props
-}: WithStyles<HTMLHeadingElement>) {
-  return <h5 {...stylex.props(styles.text, styles.h5, xstyle)} {...props} />;
+export function H2({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return (
+    <h2
+      {...stylex.props([styles.text, styles.heading, styles.h2, xstyle])}
+      {...props}
+    />
+  );
 }
 
-export function H6({
-  xstyle,
-  className: _cn,
-  style: _style,
-  ...props
-}: WithStyles<HTMLHeadingElement>) {
-  return <h6 {...stylex.props(styles.text, styles.h6, xstyle)} {...props} />;
+export function H3({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return (
+    <h3
+      {...stylex.props([styles.text, styles.heading, styles.h3, xstyle])}
+      {...props}
+    />
+  );
+}
+
+export function H4({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return (
+    <h4
+      {...stylex.props([styles.text, styles.heading, styles.h4, xstyle])}
+      {...props}
+    />
+  );
+}
+
+export function H5({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return (
+    <h5
+      {...stylex.props([styles.text, styles.heading, styles.h5, xstyle])}
+      {...props}
+    />
+  );
+}
+
+export function H6({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return (
+    <h6
+      {...stylex.props([styles.text, styles.heading, styles.h6, xstyle])}
+      {...props}
+    />
+  );
+}
+
+function H1_Inner({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return <Heading level={1} xstyle={[styles.h1, xstyle]} {...props} />;
+}
+
+function H2_Inner({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return <Heading level={2} xstyle={[styles.h2, xstyle]} {...props} />;
+}
+
+function H3_Inner({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return <Heading level={3} xstyle={[styles.h3, xstyle]} {...props} />;
+}
+
+function H4_Inner({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return <Heading level={4} xstyle={[styles.h4, xstyle]} {...props} />;
+}
+
+function H5_Inner({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return <Heading level={5} xstyle={[styles.h5, xstyle]} {...props} />;
+}
+
+function H6_Inner({ xstyle, ...props }: WithStyles<HTMLHeadingElement>) {
+  return <Heading level={6} xstyle={[styles.h6, xstyle]} {...props} />;
 }
 
 export function P({
@@ -187,12 +255,12 @@ export function Img({
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
-    h1: H1,
-    h2: H2,
-    h3: H3,
-    h4: H4,
-    h5: H5,
-    h6: H6,
+    h1: H1_Inner,
+    h2: H2_Inner,
+    h3: H3_Inner,
+    h4: H4_Inner,
+    h5: H5_Inner,
+    h6: H6_Inner,
     p: P,
     pre: Pre,
     code: InlineCode,
@@ -214,63 +282,63 @@ const styles = stylex.create({
     marginBlock: 0,
     marginInline: "auto",
     maxWidth: "54rem",
+    position: "relative",
+  },
+  headingLink: {
+    textDecoration: "none",
+  },
+  headingHash: {
+    position: "absolute",
+    display: {
+      default: null,
+      "@media (max-width: 58rem)": "none",
+    },
+    left: "-0.25em",
+    transform: "translateX(-100%)",
+    color: colors.overlay1,
+    textDecoration: "none",
+    opacity: {
+      default: 0,
+      ":where(:hover > *)": 1,
+    },
+    transitionProperty: "opacity",
+    transitionDuration: "0.2s",
+  },
+  heading: {
+    marginTop: "1em",
   },
   h1: {
     fontSize: text.h1,
     fontWeight: 100,
     lineHeight: 0.9,
-    marginTop: {
-      default: "1em",
-      ":first-child": 0,
-    },
   },
   h2: {
     color: colors.mauve,
     fontSize: text.h2,
     fontWeight: 700,
     lineHeight: 1,
-    marginTop: {
-      default: "1em",
-      ":first-child": 0,
-    },
   },
   h3: {
     color: colors.red,
     fontSize: text.h3,
     fontWeight: 500,
     lineHeight: 1.2,
-    marginTop: {
-      default: "1em",
-      ":first-child": 0,
-    },
   },
   h4: {
     color: colors.teal,
     fontSize: text.h4,
     fontWeight: 600,
     lineHeight: 1.4,
-    marginTop: {
-      default: "1em",
-      ":first-child": 0,
-    },
   },
   h5: {
     fontSize: text.h5,
     fontWeight: 700,
     lineHeight: 1.5,
-    marginTop: {
-      default: "1em",
-      ":first-child": 0,
-    },
   },
   h6: {
     fontSize: text.p,
     fontWeight: 800,
     lineHeight: 1.6,
-    marginTop: {
-      default: "1em",
-      ":first-child": 0,
-    },
   },
   p: {
     color: colors.fg,

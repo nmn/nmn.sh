@@ -7,9 +7,14 @@ export const metadata = {
   description: "From the archive: What is the feature set of Web Components?",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-<Container href="https://naman34.svbtle.com/what-do-web-components-do">
+<Container
+  href="https://naman34.svbtle.com/what-do-web-components-do"
+  path={__dirname}
+>
   <Word scale={81}>What</Word>
   <Word scale={21} italic>
     {"do"}

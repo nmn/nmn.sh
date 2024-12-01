@@ -7,9 +7,15 @@ export const metadata = {
   description: "From the archive: Why Shadow DOM is a bad idea",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-<Container href="https://naman34.svbtle.com/shadow-dom-considered-harmful">
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container
+  href="https://naman34.svbtle.com/shadow-dom-considered-harmful"
+  path={__dirname}
+>
   <Word scale={122}>Shadow</Word>
   <Word scale={63}>DOM</Word>
   <Word scale={168}>considered</Word>

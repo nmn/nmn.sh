@@ -7,9 +7,15 @@ export const metadata = {
   description: "From the Archive: Thoughts on Swift, while learning Rust",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-<Container href="https://naman34.svbtle.com/swift-is-the-more-convenient-rust">
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container
+  href="https://naman34.svbtle.com/swift-is-the-more-convenient-rust"
+  path={__dirname}
+>
   <Word scale={84}>Swift</Word>
   <Word scale={24.5}>is</Word>
   <Word scale={21}>a</Word>

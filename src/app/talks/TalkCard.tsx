@@ -1,6 +1,6 @@
 import React, { useId } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 import * as stylex from "@stylexjs/stylex";
 import { colors, spacing, text } from "../vars.stylex";

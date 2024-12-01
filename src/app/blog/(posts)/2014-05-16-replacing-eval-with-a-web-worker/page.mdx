@@ -7,9 +7,12 @@ export const metadata = {
   description: "From the archive: Using a web worker instead of eval()",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-<Container>
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
   <Word scale={147.5}>Replacing</Word>
   <Word scale={44} italic>
     {"Eval"}

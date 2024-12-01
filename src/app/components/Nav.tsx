@@ -1,6 +1,6 @@
 import React from "react";
 import * as stylex from "@stylexjs/stylex";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { spacing } from "../vars.stylex";
 
 export function Nav() {

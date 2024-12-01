@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import * as stylex from "@stylexjs/stylex";
 import { spacing } from "../vars.stylex";
 import Logo from "../Logo";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import Nav from "../components/Nav";
 
 export const metadata: Metadata = {
@@ -48,6 +48,6 @@ const styles = stylex.create({
   },
   main: {
     flexGrow: 1,
-    paddingInline: spacing.sm,
+    paddingInline: spacing.md,
   },
 });

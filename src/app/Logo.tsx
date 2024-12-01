@@ -50,6 +50,7 @@ const styles = stylex.create({
     containerType: "inline-size",
     [vars.collapsed]: 0,
     fill: colors.fg,
+    viewTransitionName: "logo",
   },
   collapse: {
     [vars.collapsed]: {

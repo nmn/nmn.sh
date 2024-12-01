@@ -1,6 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import Logo from "./Logo";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { spacing } from "./vars.stylex";
 
 export default function Home() {

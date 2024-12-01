@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Hello!",
+  title: "Hello there!",
   date: "2024-11-10",
   author: "Naman Goel",
   published: true,
@@ -7,9 +7,12 @@ export const metadata = {
   description: "welcome to my new website!",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-<Container>
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
   <Word scale={84}>Hello</Word>
   <Word scale={91.5}>there!</Word>
 </Container>

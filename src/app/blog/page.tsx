@@ -1,72 +1,8 @@
 import * as stylex from "@stylexjs/stylex";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { H1, P, Ul } from "../../mdx-components";
-import fs from "fs/promises";
-import path from "path";
-
-import * as runtime from "react/jsx-runtime";
-// import * as provider from "@mdx-js/react";
-import { evaluate } from "@mdx-js/mdx";
-import { unstable_cache } from "next/cache";
 import { colors, fonts, spacing, text } from "../vars.stylex";
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-const blogDir = path.join(__dirname, "(posts)");
-
-type Config = {
-  title?: string;
-  description?: string;
-  date?: string;
-  published?: boolean;
-  tags?: string[];
-};
-
-const getBlogPosts = unstable_cache(async () => {
-  const blogs = await fs.readdir(blogDir);
-
-  // filter for only folders
-  const blogsPathsAndTitles = blogs.map(async (blog) => {
-    const blogPath = path.join(blogDir, blog);
-    const stat = await fs.stat(blogPath);
-
-    if (!stat.isDirectory()) {
-      return null;
-    }
-
-    const filesWithinFolder = await fs.readdir(blogPath);
-    if (!filesWithinFolder.includes("page.mdx")) {
-      return null;
-    }
-
-    const filePath = path.join(blogPath, "page.mdx");
-    const file = await fs.readFile(filePath, "utf-8");
-
-    const lines = file.split("\n");
-    const firstImport = lines.findIndex((line) => line.startsWith("import "));
-
-    const relevantContent = lines.slice(0, firstImport).join("\n");
-
-    const { metadata }: { metadata?: Config } = (await evaluate(
-      relevantContent,
-      { ...runtime }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    )) as any;
-
-    if (metadata == null) {
-      return null;
-    }
-
-    return { ...metadata, path: "/blog/" + blog };
-  });
-  const maybePostsResolved = await Promise.all(blogsPathsAndTitles);
-
-  return maybePostsResolved
-    .filter((post) => post !== null)
-    .sort((a, b) =>
-      a.date != null && b.date != null ? b.date.localeCompare(a.date) : 0
-    );
-});
+import { getBlogPosts } from "./getPosts";
 
 export default async function Home() {
   const posts = await getBlogPosts();
@@ -80,7 +16,9 @@ export default async function Home() {
           <li {...stylex.props(styles.li)} key={post.path}>
             <div {...stylex.props(styles.row)}>
               <Link {...stylex.props(styles.link)} href={post.path}>
-                {post.title}
+                {post.title
+                  ? wrapTitleWithViewTransitionNames(post.title, post.path)
+                  : ""}
               </Link>
               <span {...stylex.props(styles.date)}>{post.date}</span>
             </div>
@@ -90,6 +28,40 @@ export default async function Home() {
       </Ul>
     </div>
   );
+}
+
+function wrapTitleWithViewTransitionNames(
+  title: string,
+  path: string = "unknwon"
+) {
+  const safePath = path.split("/").pop();
+
+  const wordCounts: { [key: string]: number } = {};
+  return title.split(" ").map((origWord, i) => {
+    // remove special characters
+    const word = origWord.toLocaleLowerCase().replace(/[^a-z0-9\s-_]/g, "");
+
+    const count = wordCounts[word] ?? 0;
+    wordCounts[word] = (wordCounts[word] ?? 0) + 1;
+
+    return (
+      <>
+        <span
+          key={i}
+          style={{
+            viewTransitionName:
+              "_" +
+              safePath +
+              "________" +
+              word +
+              (count > 0 ? "___" + count : ""),
+          }}
+        >
+          {origWord}
+        </span>{" "}
+      </>
+    );
+  });
 }
 
 const styles = stylex.create({

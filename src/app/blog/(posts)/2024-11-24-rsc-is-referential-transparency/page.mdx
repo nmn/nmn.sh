@@ -9,9 +9,12 @@ export const metadata = {
     "The easiest way to understand RSCs, understand referential transparency",
 };
 
-import { Container, Word } from "../../SlabTitle";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-<Container>
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
   <Word scale={35}>To</Word>
   <Word scale={174}>understand</Word>
   {/* 

@@ -15,7 +15,9 @@
     "@stylexjs/stylex": "^0.10.0-beta.2",
     "@types/mdx": "^2.0.13",
     "bright": "^0.8.5",
+    "feed": "^4.2.2",
     "next": "15.0.3",
+    "next-view-transitions": "^0.3.2",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-tweet": "^3.2.1"
