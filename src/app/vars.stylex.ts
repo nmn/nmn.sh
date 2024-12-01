@@ -30,8 +30,8 @@ export const colors = stylex.defineVars({
   surface1: "light-dark(#3e4a1e, #51576d)",
   surface0: "light-dark(#3e4a0e, #414559)",
   base: "light-dark(#3e3e3e, #303446)",
-  mantle: "light-dark(#3e3e2e, #292c3c)",
-  crust: "light-dark(#3e3e1e, #232634)",
+  mantle: "light-dark(#aeaeae, #292c3c)",
+  crust: "light-dark(#dedede, #232634)",
 });
 
 export const fonts = stylex.defineVars({

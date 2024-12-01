@@ -202,6 +202,20 @@ export function Li({
   return <li {...stylex.props(styles.li, xstyle)} {...props} />;
 }
 
+export function Blockquote({
+  xstyle,
+  className: _cn,
+  style: _style,
+  ...props
+}: WithStyles<HTMLElement>) {
+  return (
+    <blockquote
+      {...stylex.props(styles.text, styles.blockquote, xstyle)}
+      {...props}
+    />
+  );
+}
+
 export function A({
   xstyle,
   className: _cn,
@@ -267,6 +281,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ul: Ul,
     ol: Ol,
     li: Li,
+    blockquote: Blockquote,
     a: A,
     strong: Strong,
     em: Em,
@@ -341,15 +356,40 @@ const styles = stylex.create({
     lineHeight: 1.6,
   },
   p: {
-    color: colors.fg,
     fontSize: text.p,
     fontWeight: 400,
     lineHeight: 1.4,
-    marginTop: "1em",
+    marginTop: {
+      default: "1em",
+      ":first-child": 0,
+    },
   },
   li: {
     "::marker": {
       color: colors.maroon,
+    },
+  },
+  blockquote: {
+    position: "relative",
+    backgroundColor: `color-mix(in oklch, ${colors.crust}, transparent 50%)`,
+    paddingInline: spacing.md,
+    paddingBlock: spacing.xs,
+    color: colors.overlay2,
+    borderLeftWidth: 2,
+    borderLeftStyle: "solid",
+    borderLeftColor: `color-mix(in oklch, ${colors.peach}, transparent 75%)`,
+    borderTopRightRadius: spacing.xxxs,
+    borderBottomRightRadius: spacing.xxxs,
+    marginTop: "1em",
+    "::before": {
+      content: '"“"',
+      color: colors.overlay2,
+      position: "absolute",
+      fontSize: text.h1,
+      top: "-0.2em",
+      left: "0.1em",
+      zIndex: -1,
+      opacity: 0.25,
     },
   },
   pre: {
