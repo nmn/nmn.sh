@@ -6,6 +6,5 @@
     "@stylexjs/valid-styles": 2,
     "@stylexjs/sort-keys": 1,
     "@stylexjs/valid-shorthands": 0
-  },
-  "ignorePatterns": "src/**/*"
+  }
 }

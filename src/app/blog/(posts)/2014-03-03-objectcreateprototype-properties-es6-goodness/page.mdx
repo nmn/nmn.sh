@@ -1,0 +1,108 @@
+export const metadata = {
+  title: "Creating Magic with Object.create()",
+  date: "2014-03-03",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the archive: Using Object.create() in ES6",
+};
+
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container
+  href="https://naman34.svbtle.com/objectcreateprototype-properties-es6-goodness"
+  path={__dirname}
+>
+  <Word scale={142}>Creating</Word>
+  <Word scale={94}>magic</Word>
+  <Word scale={44} italic>
+    {"with"}
+  </Word>
+  <Word scale={245}>Object.create()</Word>
+</Container>
+
+(_Originally published on [naman34.svbtle.com](https://naman34.svbtle.com/objectcreateprototype-properties-es6-goodness)_)
+
+Javascript's approach to objects can be quite daunting. There are a few ways to achieve the goal of making an object factory. In general, though, it comes down to two ways.
+
+### 1: Factory Function
+
+```javascript
+var makeObject = function () {
+  var obj = {};
+  obj.prop = "object name";
+  return obj;
+};
+```
+
+This is probably the most explicit way of creating an object constructor or the closest thing to a class in a javascript. (The Pseudo-classical way is another but we're not talking about that here.)
+
+The interesting part comes when you want to add a prototype to this object. The code turns to something like this:
+
+```javascript
+var makeObject = function () {
+  var obj = Object.create(prototype); //pass in the prototype object
+  obj.prop = "object name";
+  return obj;
+};
+```
+
+(If you don't know about prototypes, you should read about that [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/prototype). The interesting part is the optional, second argument of Object.create. Head over to the [MDN page](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create) for Object.create() and you'll see this:
+
+```javascript
+Object.create(proto [, propertiesObject ])
+```
+
+So, what does 'propertiesObject' mean. At first I thought, that the second property was an object itself. But that clearly throws an error. What it really does, is way cooler than that. It lets you define the behaviour of your object and makes certain properties of your object immutable for example.
+
+This can best be shown by an example.
+
+```javascript
+var myFunc = function(){...};
+myFunc.myProp = "random value here";
+console.log(myFunc.myProp);
+// => "random value here";
+```
+
+However, if you try this:
+
+```javascript
+var myFunc = function(){...};
+myFunc.name = "random value here";
+console.log(myFunc.myProp);
+// => "";
+```
+
+Hmm. Why does that happen? Well, is 'name' some sort of reserved keyword. That is certainly not the case. A console.dir(myFunc) will show you that the function does, in fact, have a property called 'name'. But for some reason it is in a lighter colour. It's in the same colour as the prototype.
+
+The thing is that 'name' is an immutable property of a function. It is a property, but you cannot change or override it. Up until recently, javascript kept all this awesome power to itself. But with Object.create, you can now make your own object properties immutable as well. (And many other cool things.) This is how.
+
+Let's say you have an object with a property 'name', which you want to keep immutable.
+
+```javascript
+var obj = Object.create(proto, {
+  name: {
+    writable: false,
+    value: "final value",
+  },
+});
+```
+
+And just like that, you obj.name is set to "final value" and cannot be changed.
+
+```javascript
+obj.name = "something else";
+console.log(obj.name);
+// => "final value"
+```
+
+It's pretty simple when you think about it. But be sure to know that no function can now mutate that value. Not even an object defined on the method.
+
+There are some more things to consider. If, for example, the property 'name' had the value of an object you _can_ add properties to that object. You can add keys and mutate the object like you can with any other object. (Unless that was disabled with the technique explained above). You can not, however, reassign it a new value. (of a string for example.)
+
+Making properties unwritable can also be done after an object has already been created with the [`Object.defineProperty(obj, prop, descriptor)`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) function. It can be disabled if you set configurable to false, as well.
+
+There is a lot more power that I will get into in the next blog post. Things like _getters_ and _setters_.

@@ -1,0 +1,126 @@
+export const metadata = {
+  title: "Why Gulp.js is awesome, and how to use it with Sails.js",
+  date: "2014-01-29",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the archive: An introduction to using Gulp",
+};
+
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container
+  href="https://naman34.svbtle.com/introduction-to-gulpjs"
+  path={__dirname}
+>
+  <Word scale={69}>Why</Word>
+  <Word scale={116}>Gulp.js</Word>
+  <Word scale={26}>is</Word>
+  <Word scale={146}>awesome</Word>
+  <Word scale={26} italic>
+    {"&"}
+  </Word>
+  <Word scale={69}>how</Word>
+  <Word scale={38}>to</Word>
+  <Word scale={55}>use</Word>
+  <Word scale={25}>it</Word>
+  <Word scale={74.5}>with</Word>
+  <Word scale={123}>Sails.js</Word>
+</Container>
+
+(_Originally published on [naman34.svbtle.com](https://naman34.svbtle.com/introduction-to-gulpjs)_)
+
+A few months ago, the folks over at Fractal, decided to reinvent Grunt. After identifying and fixing the problems with Grunt, they ended up with Gulp.js
+
+And how do you think the internet responded? You're right, it immediately turned into a flame war. No one wanted to enjoy the fact there was now more choice. Immediately people started parsing Gulp or rejecting it outright.
+
+I'm not going to spoil all the fun. When, lives are **not** at stake, wars can be fun! I'm here to praise Gulp and tell you why you should probably switch.
+
+Let me start with what isn't great about Gulp. It can all be attributed to its newness:
+
+- It doesn't have as many plug-ins
+- It doesn't have as much documentation
+- It's not integrated into popular tools and frameworks like Grunt
+- It's probably hard for people who don't know any javascript, (but Grunt isn't any easier)
+
+On the other hand, there are a bunch of things that are great about it.
+
+- The `.pipe()` function that deals with streams in inherently better for a build tool than the Grunt way.
+- The Gulp file with actual javascript code gives way more flexibility to the developer.
+- It is _WAY_ more readable.
+
+Some people may argue the readability of Gulp.js. Well let me just show you:
+
+```javascript
+var gulp = require("gulp");
+var browserify = require("gulp-browserify");
+var concat = require("gulp-concat");
+var styl = require("gulp-styl");
+var refresh = require("gulp-livereload");
+var lr = require("tiny-lr");
+var server = lr();
+
+gulp.task("scripts", function () {
+  gulp
+    .src(["src/**/*.js"])
+    .pipe(browserify())
+    .pipe(concat("dest.js"))
+    .pipe(gulp.dest("build"))
+    .pipe(refresh(server));
+});
+
+gulp.task("styles", function () {
+  gulp
+    .src(["css/**/*.css"])
+    .pipe(styl({ compress: true }))
+    .pipe(gulp.dest("build"))
+    .pipe(refresh(server));
+});
+
+gulp.task("lr-server", function () {
+  server.listen(35729, function (err) {
+    if (err) return console.log(err);
+  });
+});
+
+gulp.task("default", function () {
+  gulp.run("lr-server", "scripts", "styles");
+
+  gulp.watch("src/**", function (event) {
+    gulp.run("scripts");
+  });
+
+  gulp.watch("css/**", function (event) {
+    gulp.run("styles");
+  });
+});
+```
+
+If you're at all familiar with Grunt, you'll know how awesome that is. While in Grunt you always need to keep checking the docs, plug-ins work differently etc, Gulp is usually predictable.
+
+But the real win, comes with the way gulp works behind the scenes. Take, for example, preprocessing and minifying sass files.
+
+In grunt, you'd have to find a sass plug-in and hope it also has an option to minify your CSS. (_You may or may not have that option_) When you don't have that option, you're left making temporary files. You first generate a compiled file, and then in a second task, you have to minify it. This is slow, stupid, and can get very annoying very often. Just recently, it was driving me crazy when I found out that the browserify plug-in didn't let me minify my js.
+
+Gulp is super-easy. You take a file (or files), and run it through a bunch of filters and then output to another file. Simple.
+
+Now, you say you want to use Gulp, but your framework of choice comes with Grunt. What should you do? Well, even that is quite easy.
+
+In most cases, you should just be able to run...
+
+```bash
+npm install gulp --g
+```
+
+...and start creating gulpfiles instead of grunt files.
+
+But sometimes things can be a little hard. Take Sails.js for example. Sails is very deeply integrated with Grunt. In fact, grunt is run every time you do sails lift.
+
+So getting rid of your gruntfile is probably not going to be easy. The best thing I could think of was to use Grunt to run Gulp. Now that's pretty meta.
+
+All I had to use was super simple plug-in called [bgShell](https://github.com/rma4ok/grunt-bg-shell). And run the command 'gulp' in the background.
+
+And just like that you can start using Gulp instead of grunt, with no further problems.

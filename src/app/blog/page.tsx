@@ -37,24 +37,22 @@ function wrapTitleWithViewTransitionNames(
   const safePath = path.split("/").pop();
 
   const wordCounts: { [key: string]: number } = {};
-  return title.split(" ").map((origWord, i) => {
+  return title.split(" ").map((origWord) => {
     // remove special characters
     const word = origWord.toLocaleLowerCase().replace(/[^a-z0-9\s-_]/g, "");
 
     const count = wordCounts[word] ?? 0;
     wordCounts[word] = (wordCounts[word] ?? 0) + 1;
 
+    const uniqueName =
+      "_" + safePath + "________" + word + (count > 0 ? "___" + count : "");
+
     return (
       <>
         <span
-          key={i}
+          key={uniqueName}
           style={{
-            viewTransitionName:
-              "_" +
-              safePath +
-              "________" +
-              word +
-              (count > 0 ? "___" + count : ""),
+            viewTransitionName: uniqueName,
           }}
         >
           {origWord}
@@ -95,7 +93,6 @@ const styles = stylex.create({
     listStyle: "none",
     margin: 0,
     paddingBlock: spacing.md,
-    // paddingInline: spacing.xs,
   },
   link: {
     color: {

@@ -1,0 +1,157 @@
+export const metadata = {
+  title: "Object Getters and Setters and the many gotchas",
+  date: "2014-03-09",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the archive: Learning about ES6 getters and setters",
+};
+
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container
+  href="https://naman34.svbtle.com/object-getters-and-setters-and-its-many-gotchas"
+  path={__dirname}
+>
+  <Word scale={112}>Object</Word>
+  <Word scale={128}>getters</Word>
+  <Word scale={38} italic>
+    {"and"}
+  </Word>
+  <Word scale={126}>setters</Word>
+  <Word scale={26} italic>
+    {"&"}
+  </Word>
+  <Word scale={292}>the many gotchas</Word>
+</Container>
+
+(_Originally published on [naman34.svbtle.com](https://naman34.svbtle.com/object-getters-and-setters-and-its-many-gotchas)_)
+
+In my [previous post](/blog/2014-03-03-objectcreateprototype-properties-es6-goodness), I talked about how you could use Object.create() (or Object.defineProperty()) to supercharge your javascript object with unwritable properties. In this post, I'll talk about what else is possible with Objects in ES 6.
+
+Firstly, I would like to put it out there, that just as 'write' can take a boolean value for an object keys, there are are 'read' (does what it says) and 'configure' (that enables and disables further behaviour modification) properties as well.
+
+But what can be even more exciting that setting read-only values on objects? It's getters and setters. Many other languages have had them for objects, and javascript is finally getting it's native implementation. I would love to tell you that everything is great in javascript land, but that would be a lie. On the surface, getters and setters seem to be a great idea, but once you actually look at them, they are riddled with traps.
+
+But they can also be pretty awesome. You can think of ES6 object as being almost as powerful as Backbone models.
+
+Let's look at an example. Let's say you have a driver object with an age property.
+
+```javascript
+var driver = {
+  age: 20,
+};
+```
+
+Now, you may want some kind of validation on this property and make sure a driver's age is >= 16. You would normally do this by using getter and setter methods.
+
+```javascript
+var driver = {
+  age: 20,
+  getAge: function () {
+    return this.age;
+  },
+  setAge: function (age) {
+    if (age >= 16) this.age = age;
+  },
+};
+```
+
+This pattern usually works well, except for the fact that the age property is still easily accessible and someone could easily break things with a simple line of code:–
+
+```javascript
+driver.age = 6;
+```
+
+We don't want 6 year old drivers! How can we stop this madness from happening. Well, it turns it, we already have an answer for that too. We make a class (or object factory function).
+
+```javascript
+var Driver = function (age) {
+  var age = age || 20;
+  this.getAge = function () {
+    return age;
+  };
+  this.setAge = function (newAge) {
+    if (newAge >= 16) age = newAge;
+  };
+};
+
+var driver = new Driver(18);
+```
+
+And just like that, the age property becomes private, and can only be accessed by it's getter and setter methods. It's a powerful technique but it does have one downside. Instead of using code like this:
+
+```javascript
+checkAgeForDriving(driver.age);
+driver.age = 21;
+```
+
+We have to type something like this:
+
+```javascript
+checkAgeForDriving(driver.getAge());
+driver.setAge(21);
+```
+
+The makers of javascript decided to fix this problem, with getters and setters. Instead of defining getters and setters with Object.create, i'll talk about the more sane way doing the same. Your old getters and setters are replaced with these:
+
+```javascript
+var Driver = function (age) {
+  var age = age || 20;
+  this.__defineGetter__("age", function () {
+    return age;
+  });
+  this.__defineSetter__("age", function (newAge) {
+    if (newAge >= 16) age = newAge;
+  });
+};
+
+var driver = new Driver();
+```
+
+And now, this line of code of would just work:
+
+```javascript
+driver.age = 21;
+```
+
+But this line of code will silently fail. (unless you use 'use strict';)
+
+```javascript
+driver.age = 6;
+// => 6
+driver.age;
+// => 21
+```
+
+What's the problem with it then, you ask. Well, for one this ONLY works for private variables. If you think you can add a little extra behaviour by just using a Setter function, you're in trouble. Examine this code:
+
+```javascript
+var Driver = function (age) {
+  this.age = age || 20;
+  this.__defineGetter__("age", function () {
+    return this.age;
+  });
+  this.__defineSetter__("age", function (age) {
+    this.age = age;
+  });
+};
+var driver = new Driver(20);
+```
+
+You think this should work right? Well, what do you think happens when you call this line of code:
+
+```javascript
+driver.age = 18;
+```
+
+You expect it to work like it always has, but what really ends up happening is that a you trigger an infinite stack of recursive call... and you just crashed your browser.
+
+When you try to set the value of driver.age to 18, the setter function is invoked. The setter function, which then tries to set the driver.age property to 18, and the setter function is invoked, which then tries to set the driver.age property to 18, and the setter function is invoked.... You, get the idea.
+
+Further, getters and setters can break our existing extend methods, and they need to be redefined, with getters and setters in mind. For more information on using getters and setters, you should probably take a look at the JS Sensei, [John Resig's post](http://ejohn.org/blog/javascript-getters-and-setters/) about the topic.
+
+With getters, setters and the Object.observe API, ES6 may make Backbone redundant. But, if we are not careful with these quirks, life might be much harder in the future.

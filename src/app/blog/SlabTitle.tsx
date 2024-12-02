@@ -101,12 +101,13 @@ export function Word({
 const styles = stylex.create({
   link: {
     display: "block",
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xxxxl,
     marginInline: "auto",
     maxWidth: "54rem",
     width: "100%",
   },
   viewTransitionName: (name: string) => ({
+    // eslint-disable-next-line @stylexjs/valid-styles
     viewTransitionName: name,
   }),
   container: {
@@ -156,9 +157,9 @@ const styles = stylex.create({
   text: {
     fill: "currentColor",
     fontFamily: "var(--font-inter)",
-    fontWeight: 800,
     fontSize: 28,
-    letterSpacing: "-0.05em",
+    fontWeight: 800,
+    // letterSpacing: "-0.05em",
     lineHeight: 1,
     textTransform: "uppercase",
   },

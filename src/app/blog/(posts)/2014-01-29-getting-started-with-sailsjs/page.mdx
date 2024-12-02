@@ -1,0 +1,123 @@
+export const metadata = {
+  title: "Using Handlebars.js with Sails.js",
+  date: "2014-01-29",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "From the archive: An introduction to using Gulp",
+};
+
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container
+  href="https://naman34.svbtle.com/getting-started-with-sailsjs"
+  path={__dirname}
+>
+  <Word scale={87}>Using</Word>
+  <Word scale={233}>Handlebars.js</Word>
+  <Word scale={44} italic>
+    {"with"}
+  </Word>
+  <Word scale={123}>Sails.js</Word>
+</Container>
+
+(_Originally published on [naman34.svbtle.com](https://naman34.svbtle.com/getting-started-with-sailsjs)_)
+
+[Sails.js](http://sailsjs.org/) is a great framework that is easy to learn, well-documented and getting a lot of traction in the market. Sails.js is based on Ruby on Rails and follows its philosophy of convention over configuration. There is a lot of magic and things just work. That said, the magic seems to make more sense here than in Rails, and it usually doesn't surprise you. (That's a good thing.)
+
+The problem is that with convention over configuration philosophy comes the assumption that most people will stick to defaults. As a result, straying from the expected defaults can land you in a lot unchartered territory with little community help and almost no documentation.
+
+In my recent project, [Scribbler](http://scribbler.co) I strayed from the conventional Sails.js path on multiple occasions and after much strife, I emerged victorious. Here's my story.
+
+### Easy beginnings
+
+Right off the bat, Sails is super easy to work with, as is evidenced in this video:
+
+import { IFrame } from "@/mdx-components";
+
+<IFrame
+  aspectRatio={16 / 9}
+  width={560}
+  height={315}
+  src="//www.youtube.com/embed/GK-tFvpIR7c"
+  frameBorder="0"
+  allowFullScreen
+/>
+
+Installing Sails is super-easy:
+
+```bash
+sudo npm install -g sails
+```
+
+Creating a new project is equally easy:
+
+```bash
+sails new projectName
+```
+
+And so is generating models and controllers:
+
+```bash
+sails generate modelName
+```
+
+And boom, you have a working model with a full REST API without a single line of code. This makes starting work on actual code really fast, and all but eliminates boilerplate. But this is also when you start to notice the assumptions made by Sails on your behalf.
+
+### Preprocessing CSS and Compiling Javascript
+
+Sails, by default expects you to use Less for your CSS. I wanted to use Stylus. Also, Sails expects you to use no module system and just concat your javascript files, and I wanted to use Browserify.
+
+Now, the good news is that Sails.js uses Grunt to manage these tasks. No, Express middleware to mess with. Just, tweak the Gruntfile to replace the relevant tasks with your own preferences. A simple search for a Grunt plug-in will get you up and running in an hour, if not minutes.
+
+### Templating Engine
+
+This is where things get more complicated. Depending on which Sails version you're on, you may or may not be able to change the tempting engine after creating a project. If you're on the latest version, it shouldn't be a problem, but if you're starting a new project you can probably save some time. Sails, uses EJS templates by default. They can be good for flexibility, but can also lead to bad code, and a lot of errors.
+
+Personally, I prefer using a logic less tempting engine like Mustache or Handlebars. Getting started with Handlebars is pretty simple:
+
+```bash
+sails new projectName --template=handlebars
+```
+
+Now, in older versions of Sails, this would use the HBS templating engine made for express. There would still be a layout file, and all the other files would have an .hbs extension.
+
+In newer versions, Sails has opted for a tweaked version of consolidate.js and the command above no longer uses HBS, when you say handlebars. The config/views.js file now says handlebars, not hbs. Layout file support is now gone. Plus, as a small bug, it may still generate template files with the .hbs extension.
+
+The solution for that last problem is easy, just rename the files.
+
+The solution for the lack of layout file is more complicated. The Handlebars way of doing things is to use partials. This is a good thing, as it gives you more flexibility, and makes your code DRYer.
+
+That said, the problem is that you can't just put partials in the same folder and access them in your templates. Code like this...
+
+```handlebars
+{{> header}}
+//Other template code
+```
+
+... fails to find the partials header, even if a file named header.handlebars is in the same location.
+
+The trick is to mention the location partials in your controllers. Whenever you call res.render or res.view, the data should contain a key called partials with all the partial names pointing to their relative files addresses. For example if you a have file template.js and all its partials in a folder called partials, you'll need to use some code like this:
+
+```javascript
+var data;
+data.partials = {
+  header: "partials/header",
+  footer: "partials/footer", // ... other used partials
+};
+
+res.view(data);
+```
+
+This may not be the most ideal or clean solution, but apart from hacking the Sails.js core, this is your best bet.
+
+### Conculsion
+
+Sails.js is still in its early days. Scribbler used crash daily, until I updated Sails to the latest version (which brought the whole HBS to Handlebars issue for me). Despite that, Sails has some really good ideas and design principles and can be the next great framework to build great projects with.
+
+The conventions can sometimes get in your way, but tailoring it to your needs is not only possible, but relatively easy.
+
+Go ahead and give it a try. Build the world something great!

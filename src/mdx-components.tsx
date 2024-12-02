@@ -1,9 +1,11 @@
 import type { MDXComponents } from "mdx/types";
 import * as stylex from "@stylexjs/stylex";
 import { colors, text, fonts, spacing } from "./app/vars.stylex";
+import NextImage from "next/image";
 
 import { Code } from "bright";
 import React from "react";
+import { Link } from "next-view-transitions";
 
 // any props that an `h1` dom element might take
 type WithStyles<E extends Element> = React.HTMLAttributes<E> & {
@@ -18,7 +20,7 @@ function transformChildren(children: React.ReactNode): React.ReactNode {
         .replaceAll(/^"/g, " “")
         .replaceAll(/ "/g, " “")
         .replaceAll(/"/g, "”")
-        .replaceAll(/ '/g, "‘")
+        .replaceAll(/ '/g, " ‘")
         .replaceAll(/'/g, "’");
     }
     return child;
@@ -197,9 +199,14 @@ export function Li({
   xstyle,
   className: _cn,
   style: _style,
+  children,
   ...props
 }: WithStyles<HTMLLIElement>) {
-  return <li {...stylex.props(styles.li, xstyle)} {...props} />;
+  return (
+    <li {...stylex.props(styles.li, xstyle)} {...props}>
+      {transformChildren(children)}
+    </li>
+  );
 }
 
 export function Blockquote({
@@ -221,7 +228,10 @@ export function A({
   className: _cn,
   style: _style,
   ...props
-}: WithStyles<HTMLAnchorElement>) {
+}: WithStyles<HTMLAnchorElement> & { href: string }) {
+  if (props.href?.startsWith("/")) {
+    return <Link {...stylex.props(styles.a, xstyle)} {...props} />;
+  }
   return <a {...stylex.props(styles.text, styles.a, xstyle)} {...props} />;
 }
 
@@ -257,12 +267,58 @@ export function InlineCode({
   return <code {...stylex.props(styles.inlineCode, xstyle)} {...props} />;
 }
 
+export function IFrame({
+  xstyle,
+  height,
+  width,
+  aspectRatio = height != null && width != null ? width / height : 16 / 9,
+  ...props
+}: WithStyles<HTMLIFrameElement> & {
+  aspectRatio?: number;
+  height?: number;
+  width?: number;
+}) {
+  return (
+    <iframe
+      {...stylex.props(styles.iframe(aspectRatio), xstyle)}
+      height={height}
+      width={width}
+      {...props}
+    />
+  );
+}
+
+export function Image({
+  src,
+  alt,
+  width,
+  height,
+  xstyle,
+}: Readonly<{
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  xstyle?: stylex.StyleXStyles;
+}>) {
+  return (
+    <NextImage
+      {...stylex.props(styles.img, xstyle)}
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+    />
+  );
+}
+
 export function Img({
   xstyle,
   className: _cn,
   style: _style,
   ...props
 }: WithStyles<HTMLImageElement>) {
+  // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
   return <img {...stylex.props(styles.img, xstyle)} {...props} />;
 }
 
@@ -282,7 +338,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ol: Ol,
     li: Li,
     blockquote: Blockquote,
-    a: A,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    a: A as any,
     strong: Strong,
     em: Em,
     img: Img,
@@ -299,25 +356,35 @@ const styles = stylex.create({
     maxWidth: "54rem",
     position: "relative",
   },
+  iframe: (aspectRatio: number) => ({
+    aspectRatio,
+    borderRadius: spacing.xs,
+    display: "block",
+    height: "auto",
+    marginBlock: spacing.lg,
+    marginInline: "auto",
+    maxWidth: "min(calc(54rem + 2rem), 100%)",
+    width: "100%",
+  }),
   headingLink: {
     textDecoration: "none",
   },
   headingHash: {
-    position: "absolute",
+    color: colors.overlay1,
     display: {
       default: null,
       "@media (max-width: 58rem)": "none",
     },
     left: "-0.25em",
-    transform: "translateX(-100%)",
-    color: colors.overlay1,
-    textDecoration: "none",
     opacity: {
       default: 0,
       ":where(:hover > *)": 1,
     },
-    transitionProperty: "opacity",
+    position: "absolute",
+    textDecoration: "none",
+    transform: "translateX(-100%)",
     transitionDuration: "0.2s",
+    transitionProperty: "opacity",
   },
   heading: {
     marginTop: "1em",
@@ -370,33 +437,33 @@ const styles = stylex.create({
     },
   },
   blockquote: {
-    position: "relative",
     backgroundColor: `color-mix(in oklch, ${colors.crust}, transparent 50%)`,
-    paddingInline: spacing.md,
-    paddingBlock: spacing.xs,
-    color: colors.overlay2,
-    borderLeftWidth: 2,
-    borderLeftStyle: "solid",
-    borderLeftColor: `color-mix(in oklch, ${colors.peach}, transparent 75%)`,
-    borderTopRightRadius: spacing.xxxs,
     borderBottomRightRadius: spacing.xxxs,
+    borderLeftColor: `color-mix(in oklch, ${colors.peach}, transparent 75%)`,
+    borderLeftStyle: "solid",
+    borderLeftWidth: 2,
+    borderTopRightRadius: spacing.xxxs,
+    color: colors.overlay2,
     marginTop: "1em",
+    paddingBlock: spacing.xs,
+    paddingInline: spacing.md,
+    position: "relative",
     "::before": {
-      content: '"“"',
       color: colors.overlay2,
-      position: "absolute",
+      content: '"“"',
       fontSize: text.h1,
-      top: "-0.2em",
       left: "0.1em",
-      zIndex: -1,
       opacity: 0.25,
+      position: "absolute",
+      top: "-0.2em",
+      zIndex: -1,
     },
   },
   pre: {
     borderRadius: spacing.xxs,
+    fontSize: text.p,
     maxWidth: "calc(54rem + 36px)",
     overflow: "hidden",
-    fontSize: text.p,
   },
   code: {
     borderColor: `color-mix(in oklch, ${colors.green}, transparent 75%)`,
@@ -425,8 +492,8 @@ const styles = stylex.create({
     color: colors.blue,
     textDecorationColor: {
       default: colors.overlay0,
-      ":focus": colors.blue,
       ":hover": colors.blue,
+      ":focus": colors.blue,
     },
     textDecorationSkipInk: "all",
     textDecorationThickness: "2px",
@@ -436,7 +503,9 @@ const styles = stylex.create({
   em: { color: colors.peach },
   img: {
     display: "block",
+    height: "auto",
+    marginBlock: spacing.lg,
     marginInline: "auto",
-    maxWidth: "100%",
+    maxWidth: "min(calc(54rem + 8rem), 100%)",
   },
 });

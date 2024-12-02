@@ -8,18 +8,19 @@ export const metadata = {
 };
 
 import { Container, Word } from "@/app/blog/SlabTitle";
+import { Image } from "@/mdx-components";
 
 import path from "path";
 export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 <Container path={__dirname}>
-  <Word scale={147.5}>Replacing</Word>
-  <Word scale={44} italic>
+  <Word scale={158}>Replacing</Word>
+  <Word scale={49} italic>
     {"Eval"}
   </Word>
-  <Word scale={69.5}>with</Word>
-  <Word scale={21.5}>a</Word>
-  <Word scale={180}>Web Worker</Word>
+  <Word scale={74}>with</Word>
+  <Word scale={21}>a</Word>
+  <Word scale={193}>Web Worker</Word>
 </Container>
 
 Originally published [on naman34.svbtle.com](https://naman34.svbtle.com/replacing-eval-with-a-web-worker)
@@ -30,15 +31,36 @@ Sometime we need to actually affect the webpage by evaluating a string. Those ar
 
 I recently ran into the problem while developing [Imprezzive](http://scribbler-prelaunch-9084.onmodulus.net). Imprezzive is a modern web-based presentation framework that has been tailored especially for real-time editing and collaboration and sharing code samples.
 
-[![Screen Shot 2014-05-16 at 4.40.48 PM.png](https://svbtleusercontent.com/jrrtyhyjsw4dza_small.png)](https://svbtleusercontent.com/jrrtyhyjsw4dza.png)
+import mainScreen from "./main-screen.png";
+
+<Image
+  width={1440}
+  height={775}
+  alt="The main screen of a pressentation app. Dark grey on the left, electric blue on the right. Titled Imprezzive"
+  src={mainScreen}
+/>
 
 One of the things I wanted to accomplish with Imprezzive was to provide a text editor within the slides where you could actually run the code and see the results. This is very useful for presenting code samples and showing off what they do. Also, as code editors were just floating elements like any other element, It was also possible to compare and contrast multiple approaches to a problem and determine their correctness and performance.
 
-[![Screen Shot 2014-05-16 at 4.38.25 PM.png](https://svbtleusercontent.com/bqdcncvzs9ctlg_small.png)](https://svbtleusercontent.com/bqdcncvzs9ctlg.png)
+import codeSlide from "./code-slide.png";
+
+<Image
+  width={1213}
+  height={773}
+  alt="A slide in Imprezzive showing a code editor and a console."
+  src={codeSlide}
+/>
 
 I solved this by using the [Ace Editor](http://ace.c9.io/) with a custom theme that complemented my Tron-inspired presentation theme. I also added a mini-console under every Ace editor with a ‘Run Code’ button. A run code button is exactly the place where a developer would be tempted to use eval. I was too. But I remembered the wise words of Crockford.
 
-[![good_vs_eval.jpg](https://svbtleusercontent.com/f9imayjtiyhq5a_small.jpg)](https://svbtleusercontent.com/f9imayjtiyhq5a.jpg)
+import goodEval from "./good-and-eval.jpg";
+
+<Image
+  width={466}
+  height={250}
+  alt="Two fists. One says 'Good', the other says 'Eval'."
+  src={goodEval}
+/>
 
 I decided to do what eval does, but safely, in a web worker. A web worker has many benefits:
 
