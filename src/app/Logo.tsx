@@ -50,6 +50,7 @@ const styles = stylex.create({
     containerType: "inline-size",
     [vars.collapsed]: 0,
     fill: colors.fg,
+    // eslint-disable-next-line @stylexjs/valid-styles
     viewTransitionName: "logo",
   },
   collapse: {

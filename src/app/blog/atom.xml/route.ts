@@ -12,4 +12,4 @@ async function get() {
 }
 
 export const GET = unstable_cache(get);
-export const dynamic = "force-static";
+// export const dynamic = "force-static";

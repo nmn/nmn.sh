@@ -3,7 +3,6 @@ import * as stylex from "@stylexjs/stylex";
 import { colors, fonts, spacing } from "./vars.stylex";
 import ThemeControl from "./ThemeControl";
 import "./app.css";
-import Head from "next/head";
 import { ViewTransitions } from "next-view-transitions";
 
 export const metadata: Metadata = {
@@ -26,7 +25,7 @@ export default function RootLayout({
             href="https://fonts.gstatic.com"
             crossOrigin=""
           />
-          {/* eslint-disable-next-line @next/next/google-font-display */}
+          {/* eslint-disable-next-line @next/next/google-font-display, @next/next/no-page-custom-font */}
           <link
             href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Libre+Baskerville:ital@1&display=block"
             rel="stylesheet"

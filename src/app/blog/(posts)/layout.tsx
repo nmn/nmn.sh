@@ -36,7 +36,7 @@ const styles = stylex.create({
     textUnderlineOffset: "6px",
   },
   p: {
-    marginTop: spacing.xxxl,
     marginBottom: spacing.xxs,
+    marginTop: spacing.xxxl,
   },
 });
