@@ -104,6 +104,7 @@ const styles = stylex.create({
     marginBottom: spacing.xxxxl,
     marginInline: "auto",
     maxWidth: "54rem",
+    outline: "none",
     width: "100%",
   },
   viewTransitionName: (name: string) => ({
