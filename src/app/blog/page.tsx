@@ -93,24 +93,24 @@ const styles = stylex.create({
     listStyle: "none",
     margin: 0,
     paddingBlock: spacing.md,
-    viewTransitionName: {
-      // eslint-disable-next-line @stylexjs/valid-styles
-      default: null,
-      // eslint-disable-next-line @stylexjs/valid-styles
-      ":where(:nth-child(1))": "article-link-1",
-      // eslint-disable-next-line @stylexjs/valid-styles
-      ":where(:nth-child(2))": "article-link-2",
-      // eslint-disable-next-line @stylexjs/valid-styles
-      ":where(:nth-child(3))": "article-link-3",
-      // eslint-disable-next-line @stylexjs/valid-styles
-      ":where(:nth-child(4))": "article-link-4",
-      // eslint-disable-next-line @stylexjs/valid-styles
-      ":where(:nth-child(5))": "article-link-5",
-      // eslint-disable-next-line @stylexjs/valid-styles
-      ":where(:nth-child(6))": "article-link-6",
-      // eslint-disable-next-line @stylexjs/valid-styles
-      ":where(:nth-child(7))": "article-link-7",
-    },
+    // viewTransitionName: {
+    //   // eslint-disable-next-line @stylexjs/valid-styles
+    //   default: null,
+    //   // eslint-disable-next-line @stylexjs/valid-styles
+    //   ":where(:nth-child(1))": "article-link-1",
+    //   // eslint-disable-next-line @stylexjs/valid-styles
+    //   ":where(:nth-child(2))": "article-link-2",
+    //   // eslint-disable-next-line @stylexjs/valid-styles
+    //   ":where(:nth-child(3))": "article-link-3",
+    //   // eslint-disable-next-line @stylexjs/valid-styles
+    //   ":where(:nth-child(4))": "article-link-4",
+    //   // eslint-disable-next-line @stylexjs/valid-styles
+    //   ":where(:nth-child(5))": "article-link-5",
+    //   // eslint-disable-next-line @stylexjs/valid-styles
+    //   ":where(:nth-child(6))": "article-link-6",
+    //   // eslint-disable-next-line @stylexjs/valid-styles
+    //   ":where(:nth-child(7))": "article-link-7",
+    // },
   },
   link: {
     color: {
