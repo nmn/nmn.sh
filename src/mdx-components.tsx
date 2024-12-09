@@ -1,6 +1,6 @@
 import type { MDXComponents } from "mdx/types";
 import * as stylex from "@stylexjs/stylex";
-import { colors, text, fonts, spacing } from "./app/vars.stylex";
+import { colors, text, fonts, spacing, stateVars } from "./app/vars.stylex";
 import NextImage from "next/image";
 
 import { Code } from "bright";
@@ -322,6 +322,66 @@ export function Img({
   return <img {...stylex.props(styles.img, xstyle)} {...props} />;
 }
 
+export function Details({
+  xstyle,
+  className,
+  style: _style,
+  children,
+  ...props
+}: WithStyles<HTMLDetailsElement>) {
+  const classList = className?.split(" ") ?? [];
+
+  let type: keyof typeof detailsTypeStyles = "info";
+  if (classList.includes("warning")) {
+    type = "warning";
+  }
+  if (classList.includes("error")) {
+    type = "error";
+  }
+  if (classList.includes("tip")) {
+    type = "tip";
+  }
+
+  const [summary, ...rest] = React.Children.toArray(children);
+
+  return (
+    <details
+      {...stylex.props(
+        styles.text,
+        styles.details,
+        detailsTypeStyles[type],
+        xstyle
+      )}
+      {...props}
+    >
+      {React.cloneElement(
+        summary as React.ReactElement,
+        stylex.props(styles.summary)
+      )}
+      <div>{rest}</div>
+    </details>
+  );
+}
+
+const detailsTypeStyles = stylex.create({
+  info: {
+    backgroundColor: colors.base,
+    // color: colors.overlay0,
+  },
+  warning: {
+    backgroundColor: colors.yellow,
+    // color: colors.overlay0,
+  },
+  error: {
+    backgroundColor: colors.red,
+    // color: colors.overlay0,
+  },
+  tip: {
+    backgroundColor: colors.green,
+    // color: colors.overlay0,
+  },
+});
+
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
@@ -343,6 +403,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     strong: Strong,
     em: Em,
     img: Img,
+    details: Details,
   };
 }
 
@@ -356,6 +417,74 @@ const styles = stylex.create({
     maxWidth: "54rem",
     position: "relative",
   },
+  details: {
+    borderRadius: spacing.xxxs,
+    display: "grid",
+    gap: {
+      default: 0,
+      ":is([open])": spacing.sm,
+    },
+    // gridTemplateRows: {
+    //   default: "auto 0",
+    //   ":is([open])": "auto 1fr",
+    // },
+    [stateVars.open]: {
+      default: "0",
+      ":is([open])": "1",
+    },
+    // Look up "Space Hack"
+    [stateVars.isOpen]: {
+      // NOTE: intentially setting the value as a " " space character.
+      // This is not supported by styleX, but by using a ` ;` we can work around this.
+      default: " ;",
+      ":is([open])": "initial",
+    },
+    [stateVars.isClosed]: {
+      default: "initial",
+      // NOTE: intentially setting the value as a " " space character.
+      // This is not supported by styleX, but by using a ` ;` we can work around this.
+      ":is([open])": " ;",
+    },
+    marginTop: spacing.sm,
+    maxWidth: "min(56rem, 100%)",
+    padding: "1rem",
+    // transitionDuration: "2s",
+    // transitionProperty: "grid-template-rows",
+  },
+  summary: {
+    fontSize: text.sm,
+    fontVariant: "small-caps",
+    lineHeight: "1cap",
+    listStyle: "none",
+    position: "relative",
+    textIndent: "1em",
+    // eslint-disable-next-line @stylexjs/valid-styles
+    "::-webkit-details-marker": {
+      display: "none",
+    },
+    "::marker": {
+      display: "none",
+    },
+    "::before": {
+      borderColor: "transparent",
+      borderInlineStartColor: colors.teal,
+      borderStyle: "solid",
+      borderWidth: ".4rem",
+      content: "",
+      insetInlineStart: "1.25rem",
+      left: 0,
+      position: "absolute",
+      top: 0,
+      transform: `rotate(calc(${stateVars.open} * 90deg))`,
+      transformOrigin: "0.2rem 50%",
+      transitionDuration: "0.2s",
+      transitionProperty: "transform",
+      transitionTimingFunction: "ease-in-out",
+    },
+  },
+  detailsContent: {
+    minHeight: 0,
+  },
   iframe: (aspectRatio: number) => ({
     aspectRatio,
     borderRadius: spacing.xs,
@@ -363,7 +492,7 @@ const styles = stylex.create({
     height: "auto",
     marginBlock: spacing.lg,
     marginInline: "auto",
-    maxWidth: "min(calc(54rem + 2rem), 100%)",
+    maxWidth: "min(56rem, 100%)",
     width: "100%",
   }),
   headingLink: {
@@ -462,6 +591,7 @@ const styles = stylex.create({
   pre: {
     borderRadius: spacing.xxs,
     fontSize: text.p,
+    marginBottom: "-1em",
     maxWidth: "calc(54rem + 36px)",
     overflow: "hidden",
   },

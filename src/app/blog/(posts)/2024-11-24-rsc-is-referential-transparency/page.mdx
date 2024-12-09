@@ -34,3 +34,128 @@ export const __dirname = path.dirname(new URL(import.meta.url).pathname);
   <Word scale={188}>referential</Word>
   <Word scale={231}>transparency</Word>
 </Container>
+
+React has always been built on concepts from functional programming. It is almost a cliché to mention:
+
+```jsx
+UI = Fn(STATE);
+```
+
+However, the functional programming connections run a lot deeper, and over time React has only become _more_
+functional. Initially, React components were stateful classes, and even though the `render` method was
+pure, it would be a stretch to call the component itself a pure function. This was a long a difficult thing to
+reconcile. Component often _need_ to be stateful. How do you represent them as pure functions? There have been
+solutions to this problem in the functional programming world. The one that gets a lot of attention is **_Monads_**,
+but not in a good way. Monads are widely misunderstood, can be confusing and often make the developer experience
+more indirect than what feels natural. React, instead, adopted the idea of _Algebraic Effects_, and implemented them
+in JavaScript in the form of "Hooks". Dan Abramov has a great article [explaining this in detail](https://overreacted.io/algebraic-effects-for-the-rest-of-us/),
+but the important thing to note is that Hooks let you store state _without_ your component itself becoming stateful.
+The state lives in the React runtime, and the component function can be "pure".
+
+### Referential Transparency
+
+So, what does this have to do with React Server Components? You see, one of the qualities of "pure" functions is that
+they are _referentially transparent_. This means that you can replace a function call with its return value.
+
+```jsx
+const add = (a, b) => a + b;
+const result = add(2, 3);
+
+// is the same as:
+const result = 5;
+```
+
+This may seem obvious for a simple function like `add`, but it is a powerful property. It means that any long
+computation can be "pre-computed" ahead of time and the result can be used in its place.
+
+### Referential Transparency in React components
+
+If you consider the root component that renders an entire app, it is not usually useful to replace it with the output
+of the component. This is because, ususally, the _input_ to the component, i.e. the state of the app, is constantly changing.
+(When this is not the case, we are already able to use static site generations to "pre-compute" the output of the app).
+
+However, if you consider a smaller component, say a button, it is often obvious that many components can be _inlined_,
+where they are used.
+
+Consider a `ButtonPair` component.
+
+```jsx
+const Button = ({ onClick, children }) => (
+  <button onClick={onClick}>{children}</button>
+);
+
+const ButtonGroup = () => (
+  <div>
+    <Button onClick={() => alert("Hello")}>Click me</Button>
+    <Button onClick={() => alert("World")}>Click me</Button>
+  </div>
+);
+```
+
+This is equivalent to:
+
+```jsx
+const ButtonGroup = () => (
+  <div>
+    <button onClick={() => alert("Hello")}>Click me</button>
+    <button onClick={() => alert("World")}>Click me</button>
+  </div>
+);
+```
+
+We can _inline_ the `Button` component into the `ButtonGroup` component and remove the need for an extra
+layer component layer for React to compute. This process can be done with more components, but when then
+child component uses hooks, it can sometimes be difficult to inline them in parent components due to the
+_"rules of hooks"_.
+
+And it turns out that React Server Components don't allow such hooks.
+
+### React Server Components
+
+If you forget about async components and data fetching for a second, React Server Components is the idea of
+"inlining" or "precomputing" certain components during SSR, and never needing to render those components at all.
+
+But let's also consider async components. They are "run" initially on the server, and their result in _inlined_
+into the actual React app. It's best to think of server components as not being React components at all, but
+a way to _generate_ React components on the server. The old cliché should now be updated:
+
+```jsx
+Fn = ServerFn(ServerData);
+
+UI = Fn(STATE);
+```
+
+import { Details } from "@/mdx-components";
+
+<Details>
+  <summary>Shorter Representation</summary>
+
+You may have seen this same idea represented more succinctly as:
+
+```jsx
+UI = Fn(DATA)(STATE);
+// or
+UI = Fn(DATA, STATE);
+```
+
+I've chosen the longer representation because I think it makes the concept clearer.
+
+</Details>
+
+Server components are _higher-order functions_, that return the functions that constitue the client app components.
+The concept is radically simple. It's really just a function. But functions are powerful, and this power can be
+confusing. It is important to understand the patterns for _how_ these functions should be used and composed to
+get the most out of them.
+
+### React Server Component patterns
+
+It is important to remember that React Server Components are _functions_. Don't think of them as client side components
+that can contain state and effects. These functions are mostly _pure_, and return some data. That data just happens to
+be JSX which is something that React knows how to render.
+
+Let's now consider some of the design patterns for using functions that will translate over to React Server Components,
+as well.
+
+#### Composition
+
+One server component can use another server component.

@@ -278,3 +278,9 @@ export const scales = stylex.defineVars({
   medium: "scale(1)",
   large: "scale(1.2)",
 });
+
+export const stateVars = stylex.defineVars({
+  open: "0",
+  isOpen: null,
+  isClosed: " ;",
+});
