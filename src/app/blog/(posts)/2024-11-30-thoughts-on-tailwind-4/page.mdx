@@ -36,7 +36,7 @@ tools. The performance improvements are substantial, but not particularly import
 JIT was already fast enough.
 
 The biggest benefit of LightningCSS is the **unification** of Tailwind, imports and syntax lowerings.
-Not having to manually configure `Autoprefixr` is a big win.
+Not having to manually configure `Autoprefixer` is a big win.
 
 ### CSS-first configuration
 
@@ -82,7 +82,7 @@ is not a common use-case. So, I wonder if inlining variables would have been a b
 
 ### Native CSS cascade layers
 
-This is an unmitigated sucess and an obvious win. My biggest surprise was to learn that this wasn't
+This is an unmitigated success and an obvious win. My biggest surprise was to learn that this wasn't
 already the case. There are certain older browsers that don't support cascade layers, but it's a
 simple polyfill to fix that.
 
@@ -109,7 +109,7 @@ _controversial_.
 
 ### Gradients
 
-Tailwind 4 finally adds support for radial and conic gradients. While this is an obvious improvment,
+Tailwind 4 finally adds support for radial and conic gradients. While this is an obvious improvement,
 I think Tailwind has never handled gradients well. Defining gradients inline is problematic and the
 usage of CSS variables to do is problematic. Using `"from-indigo-500 via-blue-400 to-teal-300"` is
 not something that belongs on the HTML directly.
@@ -117,7 +117,7 @@ not something that belongs on the HTML directly.
 Tailwind should ship with a set of predefined beautiful gradients that can be used out of the box and
 let developers define their own gradients in the config file.
 
-Still, this is not a new issue it has always been possible to not use these utilities and define
+Still, this is not a new issue. It has always been possible to not use these utilities and define
 gradients in the configuation file.
 
 ### New `not-*` and `in-*` "variants"
@@ -150,7 +150,7 @@ in CSS bloat, they will not be particularly harmful.
 There are many celebrating this destruction of atomic CSS guarantees, but I think this is probably
 the most **harmful** addition to Tailwind. _Ever_.
 
-The `*` variant for tagetting direct children was already added and was problematic enough:
+The `*` variant for targeting direct children was already added and was problematic enough:
 
 ```html
 <ul class="*:p-4">
@@ -204,9 +204,9 @@ In recent versions, this has become even more common with `grow` and `shrink` re
 While these changes are good for brevity, they can sometimes increase confusion and can
 have a significant impact on the code size and runtime cost of tools such as `tailwind-merge`.
 
-The Tailwind team tends to discourage the use `tailwind-merge` and expect all styles to be
-applied statically. However, IMO, this an unrealistic expectation almost every serious project
-that uses Tailwind ususally also uses `tailwind-merge`.
+The Tailwind team tends to discourage the use of `tailwind-merge` and expect all styles to be
+applied statically. However, IMO, this is an unrealistic expectation, as almost every serious
+project that uses Tailwind, ususally also uses `tailwind-merge`.
 
 I think Tailwind should make it easier for tools such as `tailwind-merge` to exist and be as
 performant as possible. As a side-effect, it might also make the styles easier and more consistent
@@ -214,10 +214,10 @@ to read and work with.
 
 ### The rampant usage of `rem` units
 
-It is easy to change the default theme but the default theme for Tailwind uses `rem` units for
+It is easy to change the default theme, but the default theme for Tailwind uses `rem` units for
 absolutely everything. From `font-size` to spacing, and from sizing to media queries. Designers
-_love_ this as this lets them maintain their previous proportions, but this actually an accessibility
-anti-pattern.
+_love_ this as this lets them maintain their previous proportions, but this is actually an
+accessibility anti-pattern.
 
 When browsing a website, a user is able to control sizing in two ways:
 
