@@ -1,0 +1,213 @@
+export const metadata = {
+  title: "The Wishlist for Safari in 2025",
+  date: "2025-01-07",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "What Safari still needs",
+};
+
+import { Image } from "@/mdx-components";
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
+  <Word scale={56}>The</Word>
+  <Word scale={136}>Wishlist</Word>
+  <Word scale={28} italic>
+    {"for"}
+  </Word>
+  <Word scale={99}>Safari</Word>
+  <Word scale={19} italic>
+    {"in"}
+  </Word>
+  <Word scale={70}>2025</Word>
+</Container>
+
+For the last few years Jen Simmons has been working for Safari and it has noticeably
+changed the development of Safari for the better.
+
+Recently, I saw a question from her asking for our biggest wishes for Safari in 2025.
+Since I have a lot to say, I decided to write a blog post about it.
+
+import { Post } from "@/app/components/bsky";
+
+<Post handle="jensimmons.bsky.social" id="3lf3t5mjhbc23" />
+
+Now, whenever we talk about browsers and wishlists, as developers, we tend to focus on
+web standards and missing features in Webkit itself. However, I think it is valuable to
+take a step back and think about what Safari is missing from a user's perspective.
+
+## Why I use Safari as my primary browser
+
+I have been using Safari as my primary browser for years now. I have always had to use Chrome
+(or another Chromium-based browser) for certain use-cases, but in the last few years there another
+fewer and fewer reasons to need Chrome.
+
+On the flip side, there are few feature in Safari that make it difficult for me to switch away and
+why I could never fully switch to Arc or Brave.
+
+### Reader Mode
+
+Safari's Reader Mode is one of the best features of Safari. It is a simple way to remove the clutter
+from a website and focus on the content. Further, it is possible to configure settings on a per-site
+basis so that certain websites default to Reader view. I have long been using this feature to avoid
+dealing with the overbearing ads and designs of certain (mostly news) websites.
+
+### Some amazing Safari-only extensions
+
+There are a lot of legitimate criticisms of how Safari handles extensions. You're forced to package
+extensions are apps, deal with Apple's notarization or worse, app review. However, this has also enabled
+the existence of extensions that can charge money in return for a more _premium_ experience. I have a few
+such apps/extensions that keep me coming back to Safari:
+
+- [Vinegar](https://apps.apple.com/us/app/vinegar-tube-cleaner/id1591303229) - An extension that replaces the Youtube player with a fairly vanilla
+  HTML5 `<video>` player, blocks ads and generally provides a much nicer experience. I have tried to find
+  similar extensions for Chrome or Firefox but have yet to find anything that even comes close.
+- [Noir](https://getnoir.app) - is a browser extension that adds a dark mode to any website. There are of course
+  many extensions that do this across all browsers, but nothing is even close to as good as Noir. Compared to other
+  similar extensions, Noir is much better at detecting existing dark modes, keeping content readable and generally
+  creating a much better color scheme when generating a new dark mode. Other extensions _look_ like a hack. Noir is
+  so good, I usually even forget that I'm using an extension. The results look _that_ good.
+- [1Blocker](https://apps.apple.com/us/app/1blocker-ad-blocker-for-safari/id1460572424) - is an ad blocker, but it's
+  the _nicest_ ad blocker I have ever used. It does a great job at blocking ads while not affecting performance (more
+  on this below) and has some really nice features to manually hide elements on a per-site basis. I paid for it back when
+  it was a one-time purchase. Unfortunately, it has since moved to a subscription model, so I'm not sure I can continue to
+  recommend it.
+
+### The best content blocking
+
+Safari was the first browser to ship a declarative content blocking system. (And despite the fact that it shipped years ago,
+it was more powerful than what Chrome is trying to ship in manifest v3.) This system, along with an extension like 1Blocker,
+is great at blocking ads and other annoying elements on a website and usually _improving_ performance. It's also great to
+have the peace of mind that the ad blocker can't be used to track you.
+
+### Scrolling performance
+
+This is a subtle thing, but Safari has the smoothing scrolling performance of all browser engines. This has sometimes come at the
+cost of features, but I can _feel_ how smooth the scrolling is
+
+### The UI
+
+This is obviously a lot more subjective, but I generally like how Safari looks, and I prefer many of the small UI details:
+
+- I like that as the number of tabs increases, they become scrollable rather super tiny like they do in Chrome.
+- I like how easy it is customize the toolbar
+- I like the sidebar and how Tab Groups work
+- I like how the browser chrome is more compact
+
+And I know I'm in the minority here, but I've never liked the tabs on top design that Chrome pioneered. There was period of time
+(15 yeaes ago!) when Safari copied that design and I didn't like Safari's implementation either.
+
+import tabsOnTop from "./safari-toptabs.jpg";
+
+<Image
+  width={586}
+  height={68}
+  alt="Safari's tabs on top design"
+  src={tabsOnTop}
+/>
+
+### <strike>Battery Life</strike>
+
+This used to be the case, but Chrome has since caught up and Safari doesn't have a battery life advantage anymore.
+
+## How is _this_ still missing?
+
+### Custom Search Engines
+
+import searchEngines from "./search-engines.png";
+
+<Image
+  width={522}
+  height={278}
+  alt="Safari's search engines"
+  src={searchEngines}
+/>
+
+There are many issues that Safari has outside of Webkit itself, but none are more infuriating than
+the fact that Safari still doesn't support the ability to define your own custom search engines.
+
+I have been using browser extensions such as [xSearch](https://apps.apple.com/us/app/id1579902068)
+to define custom search engines for years now and while it is functional it is _far_ from being a seamless experience.
+Sorry to be cynical, but I think Apple is taking money from search engines to be included in the list of available
+search engines.
+
+### SVG Favicons
+
+The lack of support for SVG favicons is an embarrassment. Safari previously _required_ SVG icons for "Pinned Tabs",
+so it's all the more baffling that Safari still doesn't support SVG favicons.
+
+SVG Favicons solve two major problems:
+
+- Vector icons can be resolution-independent and look great on high-DPI displays.
+- SVG can use media queries within to provide different icons for light and dark mode.
+
+### Dev Tools extensions
+
+Dev tools extensions, such as [React Dev Tools](https://react.dev/reference/devtools) do not work in Safari.
+Safari itself seemingly supports dev tools extensions now, but I have yet to see one actually exist. This
+needs to be prioritized.
+
+## How is this still _so_ broken?
+
+There are couple of things that have long been broken in Safari and I'm not sure why they haven't been fixed.
+
+- Reading List syncing across devices is badly broken and completely unreliable.
+- Tab Group syncing is similarly broken and unreliable.
+  - Shared Tab Groups is a great feature but it's not something I can rely on if the sync is this broken.
+- There is general bugginess when trying to enable extensions within specific profiles.
+
+## The next top web standards
+
+Safari has added a bunch of amazing features in 2024 or is already in the process of adding them. This includes
+my _personal_ most important features:
+
+- [x] View Transitions API
+- [x] `text-box-trim`
+- [x] WASM GC
+- [-] Scroll Driven Animations
+
+So now, it's the time to ask for the next set of features that I'm personally most excited about.
+
+### Anchor Positioning
+
+Anchor positioning is an amazing feature that will simplify _so many_ layout concerns that currently rely
+on JavaScript. There are obvious use-cases for positioning various popovers, but it actually goes a lot further
+and can be used for esoteric use-cases like positioning a custom focus ring that isn't clipped by a parent's
+`overflow: hidden`.
+
+### Actually ship Scroll Driven Animations
+
+I think will happen soon, but I just want to reiterate how awesome this feature is.
+
+### `interpolate-size`
+
+Let us finally animate to `height: auto`. This is an obvious win.
+
+## Bug fixes and performance improvements
+
+Safari is keeping up when it comes to new features these days. View Transitions shipped months after Chrome.
+`:has()` and `text-box-trim` shipped months _before_ Chrome.
+
+However, Safari _still_ has the lowest web platform test score of the three major browser engines. I don't put
+too much stock in these scores. Firstly, the "tests that fail in exactly one browser" is a misleading metric to
+begin with, the overall percentage compliance is a much better metric. Secondly, not all features are equally
+important.
+
+However, it _is_ important to have good, stable implementations of the most important features. And among these,
+my biggest wish is for better SVG support.
+
+## Webkit is right about `masonry`
+
+Also in 2025, I would love to see Safari and Webkit win the debate that masonry layout belong in Grid Layout.
+Ahmad Shadeed already wrote [a great article](https://ishadeed.com/article/css-grid-masonry/) making the case
+for why masonry layout belongs in Grid Layout, so I won't rehash that here.
+
+## Conclusion
+
+There were some dark years for Safari where it lagged years behind the other browsers. Things have turned around
+massively. Here's hoping that 2025 will bring more of the same and we will be able to retire the "Safari is the new IE"
+meme for good.
