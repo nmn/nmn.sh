@@ -12,7 +12,8 @@ export default function RootLayout({
     <>
       <P xstyle={styles.p}>
         <Link {...stylex.props(styles.backLink)} href="/blog">
-          {"← "}all posts
+          <span aria-hidden={true}>{"← "}</span>
+          all posts
         </Link>
       </P>
       <div {...stylex.props(styles.container)}>{children}</div>

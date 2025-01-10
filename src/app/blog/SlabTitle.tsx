@@ -15,6 +15,8 @@ export function Container({
 }>) {
   const safePath = path.split("/").pop();
   const wordCounts: { [key: string]: number } = {};
+
+  const words: string[] = [];
   const childrenWithNames = React.Children.map(children, (child, i) => {
     if (
       child != null &&
@@ -26,6 +28,7 @@ export function Container({
       if (typeof word !== "string") {
         return child;
       }
+      words.push(word);
       word = word.toLocaleLowerCase().replace(/[^a-z0-9\s-_]/g, "");
       const count = wordCounts[word] ?? 0;
       wordCounts[word] = (wordCounts[word] ?? 0) + 1;
@@ -35,6 +38,7 @@ export function Container({
         xstyle: styles.viewTransitionName(
           "_" + safePath + "________" + word + (count > 0 ? "___" + count : "")
         ),
+        "aria-hidden": true,
       });
     }
     return child;
@@ -47,8 +51,11 @@ export function Container({
         href != null && styles.containerInLink,
         style
       )}
+      aria-label={words.join(" ")}
     >
-      {childrenWithNames}
+      <span aria-hidden={true} style={{ display: "contents" }}>
+        {childrenWithNames}
+      </span>
     </h1>
   );
   if (href != null) {

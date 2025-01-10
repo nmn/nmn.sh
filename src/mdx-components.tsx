@@ -195,6 +195,75 @@ export function Ol({
   return <ol {...stylex.props(styles.text, styles.p, xstyle)} {...props} />;
 }
 
+const iconColors = stylex.create({
+  "[ ] ": { fill: colors.lavender },
+  "[x] ": { fill: colors.green },
+  "[/] ": { fill: colors.green },
+  "[?] ": { fill: colors.mauve },
+  "[!] ": { fill: colors.peach },
+  "[*] ": { fill: colors.teal },
+  "[I] ": { fill: colors.yellow },
+});
+
+const TaskIcons = {
+  "[ ] ": (
+    <svg width="1em" height="1em" viewBox="0 0 24 24">
+      <path
+        {...stylex.props(iconColors["[ ] "])}
+        d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0-18M1 12C1 5.925 5.925 1 12 1s11 4.925 11 11s-4.925 11-11 11S1 18.075 1 12"
+      ></path>
+    </svg>
+  ),
+  "[x] ": (
+    <svg width="1em" height="1em" viewBox="0 0 24 24">
+      <path
+        {...stylex.props(iconColors["[x] "])}
+        d="M12 23c6.075 0 11-4.925 11-11S18.075 1 12 1S1 5.925 1 12s4.925 11 11 11M7.5 10.586l3 3l6-6L17.914 9L10.5 16.414L6.086 12z"
+      ></path>
+    </svg>
+  ),
+  "[/] ": (
+    <svg width="1em" height="1em" viewBox="0 0 24 24">
+      <path
+        {...stylex.props(iconColors["[/] "])}
+        d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1m7.5 11a7.5 7.5 0 0 1-7.5 7.5v-15a7.5 7.5 0 0 1 7.5 7.5"
+      ></path>
+    </svg>
+  ),
+  "[?] ": (
+    <svg width="1em" height="1em" viewBox="0 0 24 24">
+      <path
+        {...stylex.props(iconColors["[/] "])}
+        d="M12 23c6.075 0 11-4.925 11-11S18.075 1 12 1S1 5.925 1 12s4.925 11 11 11m-.174-11.11c.432-.53.974-.974 1.41-1.318a2 2 0 1 0-3.123-2.24l-.332.944l-1.886-.666l.333-.943a4.001 4.001 0 1 1 6.246 4.476c-.431.34-.817.666-1.096 1.009c-.274.338-.378.61-.378.848v1.25h-2V14c0-.867.39-1.573.826-2.11M11 18.254V16.25h2.004v2.004z"
+      ></path>
+    </svg>
+  ),
+  "[!] ": (
+    <svg width="1em" height="1em" viewBox="0 0 24 24">
+      <path
+        {...stylex.props(iconColors["[!] "])}
+        d="M23.951 21.7H.05L12 1zM11 15h2V9.5h-2zm2.004 1.5H11v2.004h2.004z"
+      ></path>
+    </svg>
+  ),
+  "[*] ": (
+    <svg width="1em" height="1em" viewBox="0 0 24 24">
+      <path
+        {...stylex.props(iconColors["[*] "])}
+        d="m12.001.63l2.903 8.35l8.839.181l-7.045 5.341l2.56 8.462L12 17.914l-7.256 5.05l2.56-8.462L.26 9.161l8.839-.18z"
+      ></path>
+    </svg>
+  ),
+  "[I] ": (
+    <svg width="1em" height="1em" viewBox="0 0 24 24">
+      <path
+        {...stylex.props(iconColors["[I] "])}
+        d="M12 6a6 6 0 0 1 6 6c0 2.22-1.21 4.16-3 5.2V19a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1.8c-1.79-1.04-3-2.98-3-5.2a6 6 0 0 1 6-6m2 15v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1zm6-10h3v2h-3zM1 11h3v2H1zM13 1v3h-2V1zM4.92 3.5l2.13 2.14l-1.42 1.41L3.5 4.93zm12.03 2.13l2.12-2.13l1.43 1.43l-2.13 2.12z"
+      ></path>
+    </svg>
+  ),
+};
+
 export function Li({
   xstyle,
   className: _cn,
@@ -202,9 +271,32 @@ export function Li({
   children,
   ...props
 }: WithStyles<HTMLLIElement>) {
+  let childrenArray = React.Children.toArray(children);
+  let svgIcon: React.ReactNode | null = null;
+  if (typeof childrenArray[0] === "string") {
+    const firstItem: string = childrenArray[0];
+    const icon = Object.keys(TaskIcons).find((icon) =>
+      firstItem.startsWith(icon)
+    );
+    if (icon != null) {
+      childrenArray = [firstItem.slice(4), ...childrenArray.slice(1)];
+      svgIcon = TaskIcons[icon as keyof typeof TaskIcons];
+    }
+  }
+
   return (
-    <li {...stylex.props(styles.li, xstyle)} {...props}>
-      {transformChildren(children)}
+    <li
+      {...stylex.props(
+        styles.li,
+        svgIcon != null && styles.withTaskIcon,
+        xstyle
+      )}
+      {...props}
+    >
+      {svgIcon != null ? (
+        <span {...stylex.props(styles.taskIcon)}>{svgIcon}</span>
+      ) : null}
+      {transformChildren(childrenArray)}
     </li>
   );
 }
@@ -561,9 +653,19 @@ const styles = stylex.create({
     },
   },
   li: {
+    paddingInlineStart: spacing.xxxs,
     "::marker": {
       color: colors.maroon,
     },
+  },
+  withTaskIcon: {
+    listStyle: "none",
+    marginInlineStart: -23,
+    paddingInlineStart: 0,
+  },
+  taskIcon: {
+    marginRight: spacing.xxs,
+    verticalAlign: "middle",
   },
   blockquote: {
     backgroundColor: `color-mix(in oklch, ${colors.crust}, transparent 50%)`,
