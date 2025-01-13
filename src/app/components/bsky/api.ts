@@ -9,19 +9,19 @@ const BASE_PATH = "https://public.api.bsky.app/xrpc";
 
 export async function fetchPost(
   config: PostHandleProps,
-  fetchOptions?: RequestInit,
+  fetchOptions?: RequestInit
 ) {
   let atUri: string;
 
   if ("handle" in config && config.handle) {
     try {
-      const resolution = await fetch(
+      const res = await fetch(
         `${BASE_PATH}/com.atproto.identity.resolveHandle?handle=${config.handle}`,
-        fetchOptions,
-      ).then(
-        (res) =>
-          res.json() as Promise<ComAtprotoIdentityResolveHandle.OutputSchema>,
+        fetchOptions
       );
+
+      const resolution: ComAtprotoIdentityResolveHandle.OutputSchema =
+        await res.json();
 
       if (!resolution.did) {
         throw new Error("No DID found");
@@ -38,10 +38,12 @@ export async function fetchPost(
     throw new Error("Invalid Bluesky Embed Config");
   }
 
-  const { thread } = await fetch(
+  const res = await fetch(
     `${BASE_PATH}/app.bsky.feed.getPostThread?uri=${atUri}&depth=0&parentHeight=0`,
-    fetchOptions,
-  ).then((res) => res.json() as Promise<AppBskyFeedGetPostThread.OutputSchema>);
+    fetchOptions
+  );
+  const { thread } =
+    (await res.json()) as AppBskyFeedGetPostThread.OutputSchema;
 
   if (!isThreadViewPost(thread)) {
     throw new Error("Post not found");

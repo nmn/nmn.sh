@@ -29,11 +29,3 @@ export async function Post({
 
   return <EmbeddedPost thread={data} />;
 }
-
-// export function Post({ fallback = <PostSkeleton />, ...props }: PostProps) {
-//   return (
-//     <Suspense fallback={fallback}>
-//       <SuspensedPost {...props} />
-//     </Suspense>
-//   );
-// }
