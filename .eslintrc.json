@@ -1,10 +1,11 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript"],
-  "plugins": ["@stylexjs"],
+  "plugins": ["@stylexjs", "react-compiler"],
   "rules": {
     "@typescript-eslint/no-unused-vars": [2, { "argsIgnorePattern": "^_" }],
     "@stylexjs/valid-styles": 2,
     "@stylexjs/sort-keys": 1,
-    "@stylexjs/valid-shorthands": 0
+    "@stylexjs/valid-shorthands": 0,
+    "react-compiler/react-compiler": 2
   }
 }
