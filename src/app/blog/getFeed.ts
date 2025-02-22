@@ -17,27 +17,31 @@ export const getFeed = unstable_cache(async function getFeed() {
       link: `${siteURL}/blog`,
     },
   };
-
   const feed = new Feed(feedOptions);
-  const posts = await getBlogPosts();
+  try {
+    const posts = await getBlogPosts();
 
-  posts.forEach((post) => {
-    const { title, path, description = "", date = "" } = post;
+    posts.forEach((post) => {
+      const { title, path, description = "", date = "" } = post;
 
-    if (title == null || path == null) {
-      return;
-    }
+      if (title == null || path == null) {
+        return;
+      }
 
-    feed.addItem({
-      title,
-      id: path,
-      link: `${siteURL}${path}`,
-      description,
-      content: description,
-      date: new Date(date),
-      author: [feedOptions.author],
+      feed.addItem({
+        title,
+        id: path,
+        link: `${siteURL}${path}`,
+        description,
+        content: description,
+        date: new Date(date),
+        author: [feedOptions.author],
+      });
     });
-  });
 
-  return feed;
+    return feed;
+  } catch (error) {
+    console.error(error);
+    return feed;
+  }
 });

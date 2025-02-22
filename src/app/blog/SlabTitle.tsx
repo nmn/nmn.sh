@@ -24,7 +24,8 @@ export function Container({
       "type" in child &&
       child.type === Word
     ) {
-      let word = child.props.children;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let word = (child as any).props.children;
       if (typeof word !== "string") {
         return child;
       }
@@ -35,6 +36,7 @@ export function Container({
 
       return React.cloneElement(child, {
         key: child.key ?? i,
+        // @ts-expect-error: TypeScript does not recognize the xstyle property
         xstyle: styles.viewTransitionName(
           "_" + safePath + "________" + word + (count > 0 ? "___" + count : "")
         ),
