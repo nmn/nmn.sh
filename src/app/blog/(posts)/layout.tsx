@@ -16,7 +16,7 @@ export default function RootLayout({
           all posts
         </Link>
       </P>
-      <div {...stylex.props(styles.container)}>{children}</div>
+      <div>{children}</div>
     </>
   );
 }
@@ -39,25 +39,5 @@ const styles = stylex.create({
   p: {
     marginBottom: spacing.xxs,
     marginTop: spacing.xxxl,
-  },
-  container: {
-    // viewTransitionName: {
-    //   // eslint-disable-next-line @stylexjs/valid-styles
-    //   default: null,
-    //   // eslint-disable-next-line @stylexjs/valid-styles
-    //   ":where(:not(#_)) > :nth-child(2)": "article-block-1",
-    //   // eslint-disable-next-line @stylexjs/valid-styles
-    //   ":where(:not(#_)) > :nth-child(3)": "article-block-2",
-    //   // eslint-disable-next-line @stylexjs/valid-styles
-    //   ":where(:not(#_)) > :nth-child(4)": "article-block-3",
-    //   // eslint-disable-next-line @stylexjs/valid-styles
-    //   ":where(:not(#_)) > :nth-child(5)": "article-block-4",
-    //   // eslint-disable-next-line @stylexjs/valid-styles
-    //   ":where(:not(#_)) > :nth-child(6)": "article-block-5",
-    //   // eslint-disable-next-line @stylexjs/valid-styles
-    //   ":where(:not(#_)) > :nth-child(7)": "article-block-6",
-    //   // eslint-disable-next-line @stylexjs/valid-styles
-    //   ":where(:not(#_)) > :nth-child(8)": "article-block-7",
-    // },
   },
 });

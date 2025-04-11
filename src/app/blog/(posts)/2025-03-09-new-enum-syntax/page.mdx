@@ -1,0 +1,231 @@
+export const metadata = {
+  title: "New enum syntax for TypeScript",
+  date: "2025-03-09",
+  author: "Naman Goel",
+  published: true,
+  tags: ["typescript"],
+  description: "A proposal for new enum syntax for TypeScript",
+};
+
+import { Image } from "@/mdx-components";
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
+  <Word scale={67}>New</Word>
+  <Word scale={52} italic>
+    {"enum"}
+  </Word>
+  <Word scale={116}>syntax</Word>
+  <Word scale={56}>for</Word>
+  <Word scale={175}>typescript</Word>
+</Container>
+
+There has been a lot of excitement around Typescript lately. There's the Go rewrite to look forward to.
+But even without the wait, Node.js has _finally_ added native support for Typescript syntax. An interesting
+detail about this native support is that it can only _remove_ typescript syntax, it cannot _transform_ the
+syntax itself. This is not new, as other projects have implemented Typescript compilers that work similarly
+and replace the type annotations with whitespace, making line and column numbers _just work_ even after
+transformation. This is to say nothing about the performance benefits of such a simple transformation.
+
+The Typescript team itself has seen value in this and has shipped a new `--erasable-syntax-only` flag,
+that disallows certain Typescript features that are not compatible with such a transformation. Fortunately,
+none of these incompatible features are all that important to begin with and are usually just syntax conveniences
+that helps write less code. There is one exception, however, `enums`.
+
+### Syntax Proposal
+
+Many, including myself, would argue that Typescript enums are a mess and it's better to just use union types instead.
+However, `enums` are a useful feature and this is a great opportunity to get them right. Here's my proposal for
+how it could work:
+
+```typescript
+const LogLevel = {
+  info: "info",
+  warning: "warning",
+  error: "error",
+} as enum;
+```
+
+Typescript already supports `as const` and `as SomeType` to annotate javascript expressions. This same syntax could
+be extended to support simple object expressions as a way to define `enums`. This _new_ enum would be a plain object
+only and would not have any of the other fancy runtime features that Typescript enums do today. `enum`s should purely
+be a typesystem feature.
+
+Of course, enums should support different kinds of backing values.
+
+```typescript
+const Level = {
+  low: 0,
+  medium: 1,
+  high: 2,
+} as enum;
+```
+
+Typescript could validate that all values within an enum are the same primitive type.
+
+The usage with `switch` statements would work as expected:
+
+```typescript
+switch (level) {
+  case Level.low:
+    return "low";
+  case Level.medium:
+    return "medium";
+  case Level.high:
+    return "high";
+}
+```
+
+### OptionSets
+
+This is also an opportunity to introduce a _new_ feature to typescript: Option Sets. It is sometimes
+useful to create a type where you can have _more_ than a single value at a time. This is usually done
+by using bitshifting and bitwise OR, but there has been no typesystem support for this so far.
+
+By enforcing certain patterns, this could be made possible in Typescript:
+
+```typescript
+const TextOptions = {
+  autoCorrect: 1 << 0,
+  autoCaptitalize: 1 << 1,
+  autoComplete: 1 << 2,
+} as optionSet;
+```
+
+Typescript would enforce that each of the individual options is expressed as a bitshift expression
+with no overlaps.
+
+Additional "convenience" value can be included as getter functions:
+
+```typescript
+const TextOptions = {
+  autoCorrect: 1 << 0,
+  autoCaptitalize: 1 << 1,
+  autoComplete: 1 << 2,
+
+  get everything(): TextOptions {
+    return this.autoCorrect | this.autoCaptitalize | this.autoComplete;
+  },
+} as optionSet;
+```
+
+The slightly more interesting question would be how to _use_ these optionSets.
+Typescript could treat optionSets distinctly from numbers and disallow arbitrary
+mathematical expressions except those that are relevant, such as:
+
+```typescript
+if (TextOptions.autoCorrect & (textOptions !== 0)) {
+  config.autoCorrect = true;
+}
+if (TextOptions.autoCaptitalize & (textOptions !== 0)) {
+  config.autoCaptitalize = true;
+}
+if (TextOptions.autoComplete & (textOptions !== 0)) {
+  config.autoComplete = true;
+}
+```
+
+It would only be valud to `|` or `&` with another value of the same type
+and comparison against `0`.
+
+### Enums with Data?
+
+Now, getting into the more holy grail situation of enums, it would great to support
+enums with data. Again, this is already possible with union types, but could there be
+a way to add first class support at the typesystem level that could help simplify things
+and improve performance in large projects?
+
+Expressing such a type seems possible.
+
+```typescript
+const Result = {
+  error(message: string) {
+    return { type: "error", message };
+  },
+  ok(data: T) {
+    return { type: "ok", data };
+  },
+} as enum<T>;
+```
+
+However, when it comes to actually using such a type and enforcing exhaustiveness, things get
+a bit more complicated. Ideally, we'd get [native support](https://github.com/tc39/proposal-pattern-matching)
+for `match` expressions in Javascript and Typescript could lean on that.
+
+```typescript
+const result = Result.ok('hello');
+
+const dataOrErrMsg = match (result) {
+  when { type: 'ok', let data }: data;
+  when { type: 'error', let message }: message;
+}
+```
+
+However, while we wait for the `pattern-matching` proposal to gain traction, we could
+add an additional constraint to enums with data and require all possible values to be
+objects with a consistent `key`.
+
+This would mean that something like this would be invalid:
+
+```typescript
+const Result = {
+  yes(data: T) {
+    return { type: "yes", data };
+  },
+  no() {
+    // All cases of enums with data must return an object
+    // with a `type` property
+    return false;
+  },
+  error(message: string) {
+    return { type: "error", message };
+  },
+} as enum<T>;
+```
+
+Ideally, the keyname should be configurable, and Typescript should be able to
+infer that in this case the key is `type`, but you should be able to use any
+consistent key that you want.
+
+#### A compromise?
+
+The enums with data proposal is definitely a lot more complex that simply introducing
+a new simple syntax for enums. Perhaps we could compromise in the meantime and settle
+on something simpler for enums with data in the meantime?
+
+```typescript
+const ResultKey = {
+  error: "error",
+  ok: "ok",
+} as enum;
+const Result = {
+  error(message: string) {
+    return { [ResultKey.error]: message };
+  },
+  ok(data: T) {
+    return { [ResultKey.ok]: data };
+  },
+} satisfies EnumWithData<ResultKey, "type">;
+```
+
+Where Typescript ships a new utility type `EnumWithData<EnumKey, KeyName>` which would enforce
+that all possible values of `EnumKey` are objects with a `KeyName` property.
+
+```typescript
+type EnumWithData<EnumKey, KeyName extends string> = {
+  [K in EnumKey]: { [KeyName]: K };
+};
+```
+
+## Conclusion
+
+The new tools and implementations of Typescript that simply erase types is a great step forward.
+It lets us move in a direction that would be compatible with the _types as comments_ proposal.
+
+But we should settle for losing out on useful features as we move into this new world. We should
+come up with new syntax solutions that help us bring along useful typesystem features without adding
+new syntax. And while we're at it, we should also fix the major mistakes in Tyepscript such as how
+enums behave today!
