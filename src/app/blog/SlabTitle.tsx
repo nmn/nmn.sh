@@ -189,6 +189,7 @@ const styles = stylex.create({
     // },
     color: "currentColor",
     fontFamily: "var(--font-baskerville)",
+    letterSpacing: "-0.05em",
     fontSize: 29,
     fontStyle: "italic",
     fontWeight: "lighter",

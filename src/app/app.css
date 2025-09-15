@@ -1,7 +1,7 @@
 @layer reset {
   :root {
     --font-inter: "Inter", "Impact", sans-serif;
-    --font-baskerville: "Baskerville", "Garamond", serif;
+    --font-baskerville: "Baskervville", "Baskerville", "Garamond", serif;
   }
 
   html,
