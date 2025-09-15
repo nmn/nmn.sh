@@ -4,6 +4,9 @@ import { colors, fonts, spacing } from "./vars.stylex";
 import ThemeControl from "./ThemeControl";
 import "./app.css";
 import { ViewTransitions } from "next-view-transitions";
+import BlueskyLogo from "./components/icons/bluesky";
+import TwitterLogo from "./components/icons/twitter";
+import MastodonLogo from "./components/icons/mastodon";
 
 export const metadata: Metadata = {
   title: "Naman Goel",
@@ -53,7 +56,32 @@ export default function RootLayout({
         </head>
         <ThemeControl style={styles.body}>
           {children}
-          <footer {...stylex.props(styles.footer)}>All Rights Reserved.</footer>
+          <footer {...stylex.props(styles.footer)}>
+            <div {...stylex.props(styles.footerLogos)}>
+              <a
+                href="https://bsky.app/profile/nmn.bsky.social"
+                target="_blank"
+                {...stylex.props(styles.logoLink)}
+              >
+                <BlueskyLogo style={styles.footerLogo} />
+              </a>
+              <a
+                href="https://x.com/naman34"
+                target="_blank"
+                {...stylex.props(styles.logoLink)}
+              >
+                <TwitterLogo style={styles.footerLogo} />
+              </a>
+              <a
+                href="https://indieweb.social/@nmn"
+                target="_blank"
+                {...stylex.props(styles.logoLink)}
+              >
+                <MastodonLogo style={styles.footerLogo} />
+              </a>
+            </div>
+            <div>All Rights Reserved.</div>
+          </footer>
         </ThemeControl>
       </html>
     </ViewTransitions>
@@ -80,10 +108,34 @@ const styles = stylex.create({
     fontFamily: fonts.sans,
   },
   footer: {
+    alignItems: "center",
     color: colors.surface1,
+    display: "flex",
     fontFamily: fonts.sans,
+    gap: spacing.lg,
+    justifyContent: "center",
     marginTop: spacing.xl,
     paddingBlock: 32,
     textAlign: "center",
+  },
+  footerLogos: {
+    alignItems: "center",
+    display: "flex",
+    gap: spacing.xxs,
+    justifyContent: "center",
+  },
+  logoLink: {
+    color: colors.fg,
+    opacity: {
+      default: 0.3,
+      ":hover": 1,
+      "@media not (hover: hover)": 1,
+    },
+    transition: "opacity 0.2s ease-in-out",
+  },
+  footerLogo: {
+    fill: "currentColor",
+    height: "1.2em",
+    width: "1.2em",
   },
 });
