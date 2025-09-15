@@ -15,6 +15,9 @@ export default function Home() {
           <Link {...stylex.props(styles.navLink)} href="/talks">
             Talks
           </Link>
+          <Link {...stylex.props(styles.navLink)} href="/media">
+            Media
+          </Link>
           <Link {...stylex.props(styles.navLink)} href="/projects">
             Projects
           </Link>

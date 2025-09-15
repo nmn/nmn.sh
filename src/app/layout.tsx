@@ -30,6 +30,16 @@ export default function RootLayout({
             href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=Libre+Baskerville:ital@1&display=block"
             rel="stylesheet"
           />
+          {/* eslint-disable-next-line @next/next/google-font-display, @next/next/no-page-custom-font */}
+          <link
+            href="https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400..700;1,400..700&family=Libre+Baskerville:ital@1&display=swap"
+            rel="stylesheet"
+          />
+          {/* eslint-disable-next-line @next/next/google-font-display, @next/next/no-page-custom-font */}
+          <link
+            href="https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400..700;1,400..700&display=swap"
+            rel="stylesheet"
+          />
           <link
             rel="icon"
             type="image/png"

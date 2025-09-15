@@ -177,7 +177,6 @@ const styles = stylex.create({
     fontFamily: "var(--font-inter)",
     fontSize: 28,
     fontWeight: 800,
-    // letterSpacing: "-0.05em",
     lineHeight: 1,
     textTransform: "uppercase",
   },
@@ -189,8 +188,7 @@ const styles = stylex.create({
     //   ":nth-child(3n + 3 of [data-italic])": colors.yellow,
     // },
     color: "currentColor",
-    fontFamily:
-      "Baskerville, 'Baskerville Old Face', 'Palatino Linotype', serif",
+    fontFamily: "var(--font-baskerville)",
     fontSize: 29,
     fontStyle: "italic",
     fontWeight: "lighter",
