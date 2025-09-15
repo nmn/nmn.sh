@@ -121,4 +121,15 @@ export const mediaItems: ReadonlyArray<MediaItem> = [
       height: 720,
     },
   },
+  {
+    title: "Slightly More Advanced Flow™",
+    link: "https://www.youtube.com/watch?v=jYwpPQT85hs",
+    source: "YouTube",
+    date: "2017-09-25",
+    image: {
+      src: "/media/2017-reactjs-sf-meetup.jpg",
+      width: 1280,
+      height: 720,
+    },
+  },
 ];

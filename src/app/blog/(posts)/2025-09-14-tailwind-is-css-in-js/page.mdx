@@ -57,6 +57,11 @@ important enough to write about and clarify things.
   allowFullScreen
 />
 
+**TLDR;** Regardless of whether StyleX is CSS-in-JS or not, it does not have any issues with SSR or those kinds of things.
+If there _is_ an issue, it might be the additional complexity of setting up your build pipeline correctly for StyleX, which
+something like Tailwind mostly side-steps by using a separate standalone process rather than integrating within the existing
+build pipeline.
+
 ### What is CSS-in-JS?
 
 The term "CSS-in-JS" came about with early libraries such as
