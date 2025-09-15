@@ -33,8 +33,8 @@ const styles = stylex.create({
     gap: 32,
     justifyContent: "center",
     minHeight: {
-      default: "90vh",
-      "@supports (height: 100dvh)": "90dvh",
+      default: "calc(90vh - 54px)",
+      "@supports (height: 100dvh)": "calc(90dvh - 54px)",
     },
     paddingBlock: spacing.sm,
   },

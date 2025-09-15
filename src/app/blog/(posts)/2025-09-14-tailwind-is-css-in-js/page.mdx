@@ -1,0 +1,113 @@
+export const metadata = {
+  title: "Either, Tailwind is CSS-in-JS ...",
+  date: "2025-04-11",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description: "... or, StyleX isn't",
+};
+
+import { Image } from "@/mdx-components";
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
+  <Word scale={62} italic>
+    {"Either"}
+  </Word>
+  <Word scale={135}>Tailwind</Word>
+  <Word scale={16} italic>
+    {"is"}
+  </Word>
+  <Word scale={145}>CSS-in-JS</Word>
+  <br />
+  <Word scale={20} italic>
+    {"or"}
+  </Word>
+  <Word scale={110}>StyleX</Word>
+  <Word scale={42} italic>
+    {"isn’t"}
+  </Word>
+</Container>
+
+The exact way that we write CSS for our web apps is a niche topic, and yet there is a huge amount
+of variety and discussion around it. Things have evolved a lot over the years. We started from a world
+preprocessors like Sass and Less, to CSS-in-JS libraries like Styled Components and Emotion, to CSS
+modules and finally to atomic CSS.
+
+However, this journey has created some confusion and ill-defined terminology, and nothing is quite
+as bad as the term "CSS-in-JS".
+
+### What is CSS-in-JS?
+
+The term "CSS-in-JS" came about with early libraries such as
+[Radium](https://github.com/FormidableLabs/radium), [Aphrodite](https://github.com/Khan/aphrodite),
+and [Glamor](https://github.com/threepointone/glamor). These libraries and their more modern
+counterparts like [Styled Components](https://styled-components.com/) and [Emotion](https://emotion.sh/),
+all let you define your styles within your JavaScript (or TypeScript) files.
+
+However, these libraries also _injected_ the styles using Javascript at runtime. Some of them
+included ways to "server render" the styles, but none of them had a way to generate a static
+CSS file.
+
+This started to change with the advent of libraries like [Linaria](https://linaria.dev/), which
+let you define you styles with mostly the same syntax as Emotion, but instead of injecting the styles
+at runtime, it would generate a static CSS file.
+
+So, the question arises, what is CSS-in-JS?
+
+And the answer is that, as a community, we have never really defined it. In one definition,
+it is anything that injects CSS at runtime. In another definition, it is anything that that gives
+you the ability to write CSS in your JavaScript files.
+
+And so, the question really becomes, do we care about how it works, or how it looks?
+
+### It's how it works
+
+If you're in the camp that would like to define CSS-in-JS, based on how it works, then of course,
+Tailwind is _not_ CSS-in-JS. Neither is Linaria and nor is StyleX.
+
+None of these libraries use runtime injection of CSS. Although all three work in different ways, they
+all generate a static CSS file at build time. And when comparing Tailwind and StyleX, they result in
+shockingly similar code with the mostly same performance characteristics.
+
+And so, when you hear people say, "CSS-in-JS is dead", they aren't talking about Linaria, Tailwind
+or StyleX. They're talking about the libraries that inject CSS at runtime.
+
+### It's how it looks
+
+If, however, you're in the camp of how it looks, then you would consider Linaria and StyleX to be
+CSS-in-JS. In that case, however, I would argue that Tailwind is CSS-in-JS, too.
+
+Just like other CSS-in-JS libraries, Tailwind lets you define your styles directly within your
+JavaScript files. The syntax is different. Instead of using CSS syntax in template strings like Linaria,
+or JavaScript objects like StyleX, Tailwind uses a special syntax made of special classNames, but
+it is still very much a syntax where you're able to write arbitrary styles with arbitrary values.
+
+Back in the days of Tailwind 1 and 2, you could make the argument that this wasn't the case, but ever since
+the Tailwind JIT and support for syntax as such as `[]` for adding arbitrary values, Tailwind is
+very much CSS-in-JS.
+
+#### Tailwind is bad at being CSS-in-JS
+
+While Tailwind is very much CSS-in-JS, as a syntax, it's not very good at being CSS-in-JS. While the
+className abstraction is great for quickly prototyping styles, it falls apart outside of the common
+use-cases. Writing CSS keyframes, view transitions, anchor positioning and anything out of the ordinary
+means reaching for an actual CSS file.
+
+This syntactic limit isn't particularly problematic for devX. It just forces you to think in two different
+paradigms for different styles in your codebase.
+
+However, it does create some friction when choosing how to generate the static CSS files for particularly
+large applications.
+
+### Conclusion
+
+I don't really care about the definition of CSS-in-JS. The industry is rapidly moving away from anything
+that injects CSS at runtime. The performance penalty is well known, and even those using libraries
+like Emotion or Styled Components are starting to migrate to newer solutions that generate static CSS files.
+
+However, if the only reason you've been scared of using Tailwind (or even Linaria) is because you've heard
+all the bad things about CSS-in-JS, then you can rest easy. Either StyleX isn't CSS-in-JS, or Tailwind is.

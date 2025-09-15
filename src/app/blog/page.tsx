@@ -1,5 +1,6 @@
 import * as stylex from "@stylexjs/stylex";
 import { Link } from "next-view-transitions";
+import React from "react";
 import { H1, P, Ul } from "../../mdx-components";
 import { colors, fonts, spacing, text } from "../vars.stylex";
 import { getBlogPosts } from "./getPosts";
@@ -48,7 +49,7 @@ function wrapTitleWithViewTransitionNames(
       "_" + safePath + "________" + word + (count > 0 ? "___" + count : "");
 
     return (
-      <>
+      <React.Fragment key={uniqueName}>
         <span
           key={uniqueName}
           style={{
@@ -57,7 +58,7 @@ function wrapTitleWithViewTransitionNames(
         >
           {origWord}
         </span>{" "}
-      </>
+      </React.Fragment>
     );
   });
 }

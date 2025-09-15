@@ -43,6 +43,14 @@ export function Container({
         "aria-hidden": true,
       });
     }
+    if (
+      child != null &&
+      typeof child === "object" &&
+      "type" in child &&
+      child.type === "br"
+    ) {
+      return <div key={"br-" + i} {...stylex.props(styles.br)} />;
+    }
     return child;
   });
 
@@ -83,16 +91,12 @@ export function Word({
   xstyle?: stylex.StyleXStyles;
 }>) {
   const height = 22;
-  const adjustedScale = scale;
   return (
-    <div
-      {...stylex.props(styles.word(adjustedScale), xstyle)}
-      data-italic={italic}
-    >
+    <div {...stylex.props(styles.word(scale), xstyle)} data-italic={italic}>
       <div {...stylex.props(styles.wordInnerDiv)}>
         <svg
           {...stylex.props(styles.svg, italic && styles.italicSvg)}
-          viewBox={`0 0 ${adjustedScale} ${height}`}
+          viewBox={`0 0 ${scale} ${height}`}
         >
           <text
             {...stylex.props(styles.text, italic && styles.italic)}
@@ -140,6 +144,10 @@ const styles = stylex.create({
       default: colors.fg,
       ":nth-child(3n + 2 of :not([data-italic]))": colors.surface2,
       ":nth-child(3n + 3 of :not([data-italic]))": colors.text,
+      ":is([data-italic])": colors.maroon,
+      ":nth-child(3n + 2 of [data-italic])": colors.lavender,
+      ":nth-child(3n + 3 of [data-italic])": colors.green,
+      ":nth-child(3n + 4 of [data-italic])": colors.pink,
     },
     flexBasis: 0,
     flexGrow: scale,
@@ -174,12 +182,22 @@ const styles = stylex.create({
     textTransform: "uppercase",
   },
   italic: {
-    color: colors.maroon,
+    // color: {
+    //   default: colors.maroon,
+    //   ":nth-child(3n + 1 of [data-italic])": colors.blue,
+    //   ":nth-child(3n + 2 of [data-italic])": colors.flamingo,
+    //   ":nth-child(3n + 3 of [data-italic])": colors.yellow,
+    // },
+    color: "currentColor",
     fontFamily:
       "Baskerville, 'Baskerville Old Face', 'Palatino Linotype', serif",
     fontSize: 29,
     fontStyle: "italic",
     fontWeight: "lighter",
     textTransform: null,
+  },
+  br: {
+    width: "100%",
+    flexShrink: 0,
   },
 });

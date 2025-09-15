@@ -1,0 +1,68 @@
+export const metadata = {
+  title: "Revisiting the Wishlist for Safari in 2025",
+  date: "2025-06-19",
+  author: "Naman Goel",
+  published: false,
+  tags: ["meta"],
+  description: "What Safari got in 2025",
+};
+
+import { Image } from "@/mdx-components";
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
+  <Word scale={156}>Revisiting</Word>
+  <Word scale={56}>The</Word>
+  <Word scale={136}>Wishlist</Word>
+  <Word scale={28} italic>
+    {"for"}
+  </Word>
+  <Word scale={99}>Safari</Word>
+  <Word scale={19} italic>
+    {"in"}
+  </Word>
+  <Word scale={70}>2025</Word>
+</Container>
+
+Half a year ago, I wrote [an article](/blog/2025-01-07-safari-wishlist-2025) about why I use Safari as my
+default (non-development) browser. In it, I described what I like about StyleX, what I dislike and a list
+of my wishlist for Safari in 2025. With the Safari 19 announcement at WWDC, let's look at what I got and
+what I didn't.
+
+## Web standards
+
+### SVG favicons
+
+FINALLY!! This is huge simply because it was glaring gap in Safari. Welcome to the 2010s Safari!
+
+### Scroll Driven Animations
+
+As expected Safari 19 will have full support for the new Scroll-linked animations in CSS. This feature has been
+available for a while now, but it was behind a flag. It will finally be enabled by default in Safari 19.
+
+This is perhaps the most exciting feature for the web platform since view transitions and container queries before
+that. The ability to have declarative scroll-linked animations that is easy but also performant will help us
+deliver a huge jump in the quality of interaction design on the web. All previous solutions to achieve the same
+results depended on using scroll event in Javascript, which worked but had the tendency to lag and drop frames.
+
+This, combined with existing CSS features such as Scroll Snap also open the door to building fluid swipe interactions
+on the web. I'm very excited about this even if Firefox support is still unknown at this point.
+
+### Anchor Positioning
+
+I'll be honest, I was not very optimistic about this feature in 2025. However, the Webkit team has delivered and
+Anchor Positioning is coming to Safari 19! This feature isn't quite as consequential as Scroll Linked animations
+as it was possible with a lot of custom, tricky code to achieve this in the past, but Anchor Positioning will
+be a huge improvement to developer experience when building menus, tooltips, hovercards etc. All while reducing
+the chances of subtle annoying bugs in the implementation.
+
+### `interpolate-size`
+
+I do not know the status of this feature in Safari 19 yet.
+
+## Other asks
+
+I have yet to install the macOS 26 beta so will update this section in the future.
