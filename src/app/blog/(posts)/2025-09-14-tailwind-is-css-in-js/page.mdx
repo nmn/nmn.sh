@@ -1,34 +1,34 @@
 export const metadata = {
-  title: "Either, Tailwind is CSS-in-JS ...",
-  date: "2025-09-14",
-  author: "Naman Goel",
+  title: 'Either, Tailwind is CSS-in-JS ...',
+  date: '2025-09-14',
+  author: 'Naman Goel',
   published: true,
-  tags: ["meta"],
+  tags: ['meta'],
   description: "... or, StyleX isn't",
 };
 
-import { Image, IFrame } from "@/mdx-components";
-import { Container, Word } from "@/app/blog/SlabTitle";
+import { Image, IFrame } from '@/mdx-components';
+import { Container, Word } from '@/app/blog/SlabTitle';
 
-import path from "path";
+import path from 'path';
 export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 <Container path={__dirname}>
   <Word scale={70} italic>
-    {"Either"}
+    {'Either'}
   </Word>
   <Word scale={135}>Tailwind</Word>
   <Word scale={17} italic>
-    {"is"}
+    {'is'}
   </Word>
   <Word scale={145}>CSS-in-JS</Word>
   <br />
   <Word scale={26} italic>
-    {"or"}
+    {'or'}
   </Word>
   <Word scale={110}>StyleX</Word>
   <Word scale={46} italic>
-    {"isn’t"}
+    {'isn’t'}
   </Word>
 </Container>
 
@@ -131,5 +131,5 @@ I don't really care about the definition of CSS-in-JS. The industry is rapidly m
 that injects CSS at runtime. The performance penalty is well known, and even those using libraries
 like Emotion or Styled Components are starting to migrate to newer solutions that generate static CSS files.
 
-However, if the only reason you've been scared of using Tailwind (or even Linaria) is because you've heard
+However, if the only reason you've been scared of using StyleX (or even Linaria) is because you've heard
 all the bad things about CSS-in-JS, then you can rest easy. Either StyleX isn't CSS-in-JS, or Tailwind is.

@@ -1,6 +1,6 @@
-import * as stylex from "@stylexjs/stylex";
-import { colors, spacing } from "../vars.stylex";
-import React from "react";
+import * as stylex from '@stylexjs/stylex';
+import { colors, spacing } from '../vars.stylex';
+import React from 'react';
 
 export function Container({
   path,
@@ -13,24 +13,27 @@ export function Container({
   href?: string;
   style?: stylex.StyleXStyles;
 }>) {
-  const safePath = path.split("/").pop();
+  const safePath = path.split('/').pop();
   const wordCounts: { [key: string]: number } = {};
 
   const words: string[] = [];
+
   const childrenWithNames = React.Children.map(children, (child, i) => {
+    const isLast = i === React.Children.count(children) - 1;
     if (
       child != null &&
-      typeof child === "object" &&
-      "type" in child &&
+      typeof child === 'object' &&
+      'type' in child &&
       child.type === Word
     ) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let word = (child as any).props.children;
-      if (typeof word !== "string") {
+      const origWord = word;
+      if (typeof word !== 'string') {
         return child;
       }
       words.push(word);
-      word = word.toLocaleLowerCase().replace(/[^a-z0-9\s-_]/g, "");
+      word = word.toLocaleLowerCase().replace(/[^a-z0-9\s-_]/g, '');
       const count = wordCounts[word] ?? 0;
       wordCounts[word] = (wordCounts[word] ?? 0) + 1;
 
@@ -38,18 +41,19 @@ export function Container({
         key: child.key ?? i,
         // @ts-expect-error: TypeScript does not recognize the xstyle property
         xstyle: styles.viewTransitionName(
-          "_" + safePath + "________" + word + (count > 0 ? "___" + count : "")
+          '_' + safePath + '________' + word + (count > 0 ? '___' + count : '')
         ),
-        "aria-hidden": true,
+        'aria-hidden': true,
+        children: isLast ? origWord : origWord + ' ',
       });
     }
     if (
       child != null &&
-      typeof child === "object" &&
-      "type" in child &&
-      child.type === "br"
+      typeof child === 'object' &&
+      'type' in child &&
+      child.type === 'br'
     ) {
-      return <div key={"br-" + i} {...stylex.props(styles.br)} />;
+      return <div key={'br-' + i} {...stylex.props(styles.br)} />;
     }
     return child;
   });
@@ -61,9 +65,9 @@ export function Container({
         href != null && styles.containerInLink,
         style
       )}
-      aria-label={words.join(" ")}
+      aria-label={words.join(' ')}
     >
-      <span aria-hidden={true} style={{ display: "contents" }}>
+      <span aria-hidden={true} style={{ display: 'contents' }}>
         {childrenWithNames}
       </span>
     </h1>
@@ -92,8 +96,8 @@ export function Word({
 }>) {
   const height = 22;
   return (
-    <div {...stylex.props(styles.word(scale), xstyle)} data-italic={italic}>
-      <div {...stylex.props(styles.wordInnerDiv)}>
+    <span {...stylex.props(styles.word(scale), xstyle)} data-italic={italic}>
+      <span {...stylex.props(styles.wordInnerDiv)}>
         <svg
           {...stylex.props(styles.svg, italic && styles.italicSvg)}
           viewBox={`0 0 ${scale} ${height}`}
@@ -106,35 +110,35 @@ export function Word({
             {children}
           </text>
         </svg>
-      </div>
-    </div>
+      </span>
+    </span>
   );
 }
 
 const styles = stylex.create({
   link: {
-    display: "block",
+    display: 'block',
     marginBottom: spacing.xxxxl,
-    marginInline: "auto",
-    maxWidth: "54rem",
-    outline: "none",
-    width: "100%",
+    marginInline: 'auto',
+    maxWidth: '54rem',
+    outline: 'none',
+    width: '100%',
   },
   viewTransitionName: (name: string) => ({
     // eslint-disable-next-line @stylexjs/valid-styles
     viewTransitionName: name,
   }),
   container: {
-    alignItems: "center",
+    alignItems: 'center',
     columnGap: spacing.xs,
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "center",
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     marginBottom: spacing.xxxxl,
-    marginInline: "auto",
-    maxWidth: "54rem",
+    marginInline: 'auto',
+    maxWidth: '54rem',
     rowGap: 8,
-    width: "100%",
+    width: '100%',
   },
   containerInLink: {
     marginBottom: 0,
@@ -142,43 +146,43 @@ const styles = stylex.create({
   word: (scale: number) => ({
     color: {
       default: colors.fg,
-      ":nth-child(3n + 2 of :not([data-italic]))": colors.surface2,
-      ":nth-child(3n + 3 of :not([data-italic]))": colors.text,
-      ":is([data-italic])": colors.maroon,
-      ":nth-child(3n + 2 of [data-italic])": colors.lavender,
-      ":nth-child(3n + 3 of [data-italic])": colors.green,
-      ":nth-child(3n + 4 of [data-italic])": colors.pink,
+      ':nth-child(3n + 2 of :not([data-italic]))': colors.surface2,
+      ':nth-child(3n + 3 of :not([data-italic]))': colors.text,
+      ':is([data-italic])': colors.maroon,
+      ':nth-child(3n + 2 of [data-italic])': colors.lavender,
+      ':nth-child(3n + 3 of [data-italic])': colors.green,
+      ':nth-child(3n + 4 of [data-italic])': colors.pink,
     },
     flexBasis: 0,
     flexGrow: scale,
     margin: 0,
     minHeight: 32,
-    minWidth: `calc(${scale + "px"} + ${scale} * 0.1vw)`,
+    minWidth: `calc(${scale + 'px'} + ${scale} * 0.1vw)`,
     padding: 0,
   }),
   wordInnerDiv: {
-    alignItems: "flex-start",
-    display: "flex",
-    height: "100%",
-    justifyContent: "center",
-    overflow: "hidden",
-    position: "relative",
+    alignItems: 'flex-start',
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    position: 'relative',
   },
   svg: {
-    aspectRatio: "inherit",
-    width: "100%",
+    aspectRatio: 'inherit',
+    width: '100%',
   },
   italicSvg: {
     // marginInline: -5,
     // marginTop: "-16%",
   },
   text: {
-    fill: "currentColor",
-    fontFamily: "var(--font-inter)",
+    fill: 'currentColor',
+    fontFamily: 'var(--font-inter)',
     fontSize: 28,
     fontWeight: 800,
     lineHeight: 1,
-    textTransform: "uppercase",
+    textTransform: 'uppercase',
   },
   italic: {
     // color: {
@@ -187,16 +191,16 @@ const styles = stylex.create({
     //   ":nth-child(3n + 2 of [data-italic])": colors.flamingo,
     //   ":nth-child(3n + 3 of [data-italic])": colors.yellow,
     // },
-    color: "currentColor",
-    fontFamily: "var(--font-baskerville)",
-    letterSpacing: "-0.05em",
+    color: 'currentColor',
+    fontFamily: 'var(--font-baskerville)',
+    letterSpacing: '-0.05em',
     fontSize: 29,
-    fontStyle: "italic",
-    fontWeight: "lighter",
+    fontStyle: 'italic',
+    fontWeight: 'lighter',
     textTransform: null,
   },
   br: {
-    width: "100%",
+    width: '100%',
     flexShrink: 0,
   },
 });
