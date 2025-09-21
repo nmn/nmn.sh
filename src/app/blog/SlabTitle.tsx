@@ -91,7 +91,7 @@ export function Word({
   children: string;
   scale: number;
   italic?: boolean;
-  offset: number;
+  offset?: number;
   xstyle?: stylex.StyleXStyles;
 }>) {
   const height = 22;

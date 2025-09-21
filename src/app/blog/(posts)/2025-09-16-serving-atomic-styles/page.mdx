@@ -1,0 +1,150 @@
+export const metadata = {
+  title: "Serving atomic styles well",
+  date: "2025-09-16",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta", "css", "atomic", "bundling"],
+  description:
+    "Strategies for shipping atomic CSS for websites large and small",
+};
+
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
+  <Word scale={124}>Serving</Word>
+  <br />
+  <Word scale={110}>atomic</Word>
+  <Word scale={58}>CSS</Word>
+  <Word scale={50} italic>
+    {"well"}
+  </Word>
+</Container>
+
+Over the last few years, Atomic CSS has gradually but consistently grown in popularity.
+StyleX started at Meta back in 2019, and has since been adopted by Figma and
+Snowflake. Companies like Airbnb have been investing in a new atomic CSS mode for Linaria.
+And Tailwind is ubiquitous enough that I don't even need to say any more.
+
+However, there is still an open question about _how_ atomic styles should be served to the
+browser. When talking to developers, I often hear questions about server rendering
+atomic styles or critical CSS. While sometimes there are some misconceptions underlying
+these questions, they're fundamentally coming from a desire to have the best possible
+performance for our users.
+
+So, let's walk through what I consider to be the best ways to bundle and serve atomic
+CSS.
+
+## Just put it all in a single unified CSS file
+
+Although it might not _seem_ like the best idea, in most cases, this simple approach
+is the ideal solution for serving atomic styles for your web app.
+
+One of the core advantages of atomic CSS is that it maximizes reusability of styles.
+Further, the more consistent the styles for various parts of your web app are, the
+smaller your unified CSS file will be. This means that even when you put _all_ the
+styles for your web app in a single CSS file, it's small enough to serve as the one
+and only CSS file for all routes.
+
+This works for both SPAs _and_ MPAs. In the case of SPAs, you load the CSS file just
+once and you never have to load any additional CSS for the rest of the session. This
+has performance benefits outside of network requests. Loading CSS during a page transition
+causes style invalidation and forces the browser to recalculate all styles on the page.
+While this is usually not the most expensive operation, when the browser is already
+busy fetching data, updating the DOM and running lots of JavaScript, style recalculation
+is just adding work at an unfortunate time. Having a single CSS file loaded upfront
+avoids this performance penalty entirely.
+
+## When a single CSS file isn't ideal
+
+Having a single CSS bundle for your entire web app is almost always a decent solution.
+If facebook.com can get away with it, it's probably fast enough. However, there are cases
+where it might not be the ideal solution.
+
+If your web application has an extremely large number of routes with enough unique,
+unshared styles, the single CSS file can become large enough that it makes sense
+to consider splitting the bundle.
+
+I say "routes" to simplify but what I really mean is your JS bundles that may be lazy-loaded.
+A "route" may or may not be associated with the actual URL paths.
+
+## How to split atomic CSS bundles?
+
+Even if you do decide to split up your atomic CSS into multiple bundles, it's not obvious _how_
+you should split this up. Using the same strategies as the ones used for JavaScript may _seem_
+like an improvement but can actually create regressions elsewhere.
+
+There are multiple factors to consider and balance when trying to split up an atomic CSS bundle:
+
+- The size of the CSS loaded at the beginning of the session
+- Optimizing the size of the gzipped bundles and not just the uncompressed CSS
+- Using CSS bundles that are easy to cache
+- Avoid style recalculation during page transitions
+
+While these are the primary factors to consider for performance, there are some additional
+considerations relevant to extremely large applications. A lot of these were brought
+to my attention while talking to the Next.js and Turbopack teams, and specifically,
+Tobias Koppers, aka [sokra](https://github.com/sokra).
+
+It is not ideal to be forced to recreate bundles for all routes on every update. Instead, it
+would be preferable to create just one new bundle for the route that may be affected and nothing else.
+This doesn't necessarily affect end-user performance, but it does affect build time after
+each update.
+
+It is also important to consider the experience of users who may have an active session _during_ an
+update to the application. Such users should be able to receive updates when they navigate to a
+new route without any issues.
+
+Considering all of these many factors to balance, and with a long and heated discussion with sokra,
+we were able to come up with a solution that meets all the requirements and is simple enough to
+understand and implement for most applications:
+
+## Create one bundle per route...
+
+In order to make initial page loads fast, there should be a smaller bundle extracted from all the component
+files that are reachable from the route being loaded. We can safely exclude any styles that are unreachable
+from a given route to make loading that specific route faster.
+
+### Serving the styles inline in the HTML
+
+If the total amount of CSS for a particular route is small enough, serving the styles in an inline `<style>` tag
+can have a performance benefit. However, it is important to note that this does affect the ability to cache the CSS
+file, and you should test this for your own application before making a final decision.
+
+As a rule of thumb, if the total amount of CSS for a particular route is less than 10KB, then it makes sense to inline the
+styles in the HTML.
+
+### Considering "critical CSS"
+
+In some scenrios, specially statically generated routes, you might be able to further improve the performance by
+shipping the critical CSS for the route. Why ship all styles that are accessible from the route when you can know
+which styles are actually used?
+
+However, this is usually not a viable solution for modern server rendered applications, as most modern frameworks
+support streaming rendering, where it is not possible to pre-emptively know which styles are actually used until
+the server render is complete. Additionally, for many applications, the route-specific styles will be small enough
+that the relative performance benefit of critical CSS may not be worth the additional complexity.
+
+## ...And defer-load a single bundle for all routes
+
+If you're working on an MPA, you can skip this section, but for SPAs, the best solution involves defer-loading a
+single bundle for all styles used by an application. After the initial page load, which will include a route-specific CSS bundle,
+the larger CSS bundle for all styles for the application should be loaded in the background and the route-specific CSS bundle can be
+replaced by the larger CSS bundle.
+
+This has a few advantages over keeping just route-specific CSS bundles:
+
+- You no longer need to lazy load CSS during route navigations, which helps avoid style recalculation
+- The single CSS bundle can be cached and used across all routes for future routes and sessions
+
+One additional optimization, that is not easy to implement, would be to conditionally skip loading the route-specific CSS
+bundle if the all-styles bundle is cached and can be loaded immediately.
+
+## Conclusion
+
+While Atomic CSS in general and Tailwind in particular have become extremely popular, atomic styles are still somewhat
+new in the grand scheme of things. My thoughts are informed by my experience working on StyleX, but I hope
+what I've presented here resonates with developers and authors of frameworks and tools such that we can establish best
+practices for serving atomic styles across various styling solutions.
