@@ -34,10 +34,10 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "babel-plugin-alias-config": "^0.0.16",
-    "babel-plugin-react-compiler": "^19.0.0-beta-ebf51a3-20250411",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.1.7",
-    "eslint-plugin-react-compiler": "^19.0.0-beta-e552027-20250112",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "typescript": "^5.9.3"
   }
 }
