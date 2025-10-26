@@ -33,7 +33,7 @@
     "@types/node": "^22.13.9",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "babel-plugin-alias-config": "^0.0.16",
+    "babel-plugin-alias-config": "^0.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.1.7",

@@ -12,6 +12,17 @@ export type MediaItem = {
 
 export const mediaItems: ReadonlyArray<MediaItem> = [
   {
+    title: "Whiskey, Web and Whatnot",
+    link: "https://www.youtube.com/watch?v=oEr-JnGMe3Y",
+    source: "YouTube",
+    date: "2025-10-23",
+    image: {
+      src: "/media/2025-www-pod.jpg",
+      width: 1280,
+      height: 720,
+    },
+  },
+  {
     title: "Logrocket - StyleX",
     link: "https://podrocket.logrocket.com/stylex-naman-goel",
     source: "Podcast",
