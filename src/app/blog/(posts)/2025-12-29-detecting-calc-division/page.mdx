@@ -1,0 +1,116 @@
+export const metadata = {
+  title: "Detecting support for length division in calc()",
+  date: "2025-12-29",
+  author: "Naman Goel",
+  published: true,
+  tags: ["meta"],
+  description:
+    "Detecting support for length division in calc(), when @supports doesn't work",
+};
+
+import { Image } from "@/mdx-components";
+import { Container, Word } from "@/app/blog/SlabTitle";
+
+import path from "path";
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
+  <Word scale={161}>Detecting</Word>
+  <Word scale={133}>Support</Word>
+  <Word scale={34} italic>
+    {"for"}
+  </Word>
+  <Word scale={123}>Division</Word>
+  <Word scale={21} italic>
+    {"in"}
+  </Word>
+  <Word scale={95}>calc()</Word>
+</Container>
+
+With modern CSS and good ol' mathemetics, it's possible to do some really cool stuff in the browser these days.
+Many CSS tricks depend on the ability to divide two lengths, and use that in a larger calculation. It's been
+used by Kizu for [Fit-to-Width Text](https://kizu.dev/fit-to-width-text/) idea (which is really cool but a different
+technique than the one used for the titles of this blog.) I also used it for H-Scolls aka Carousels for Facebook
+where the cards always fit the available width perfectly.
+
+However, the CSS we've had to resort to has been a bit of a mess. Kizu uses the `tan(atan2(length1, length2))` hack,
+which works in all three browsers, but with significant coaxing. There is a need to define the two lengths as typed
+CSS variables (`syntax: <length>`) and sometimes even using variable to capture the result. For my own implementation
+of the Carousel, I used a massive nested set of `min()` and `max()` functions to emulate container queries before they
+were widely available. However, what I really needed was something as simple as this:
+
+```css
+.card {
+  width: calc(100% / round(down, 100% / var(--min-card-width), 1));
+}
+```
+
+Let's break this down:
+
+- `100% / var(--min-card-width)` how many times can I fit the minimum card width in the available space
+- `round(down, PREV_RESULT, 1)` round that down to the largest whole number
+- `calc(100% / PREV_RESULT)` make each card be 1/Nth of the available space
+
+Many lines of hacky, error-prone CSS can be reduced to that single line. There can be a little more complexity
+when accounting for gaps between the cards, but the core math remains the same. And here's the thing, this is
+valid CSS that works today, but only in the Safari and Chrome, and fairly recent versions at that. And to add
+insult to injury, there is no good way to detect support for this in CSS. `@supports` doesn't work because it
+checks the presence of features and all browsers support `calc()` but will silently fail when diving two lengths.
+Even `caniuse` [doesn't make it easy](https://caniuse.com/mdn-css_types_calc_typed_division_produces_unitless_number)
+to search for this feature.
+
+## The solution
+
+The solution to this problem is fairly simple, which is another use for typed CSS variables. We can start off by defining
+a typed CSS variable with a default value:
+
+```css
+@property --division-result {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+```
+
+Next, we can _try_ to override the value of this variable by dividing two lengths:
+
+```css
+.body {
+  --division-result: calc(100vw / 1px);
+}
+```
+
+Now, `--division-result` will have a value of `0` if the browser does not support typed division or value > 0 if it does.
+If we had wide [support for container style queries](https://caniuse.com/css-container-queries-style), this would be sufficient,
+but sadly we don't.
+
+So, if we do want a solution without JS for this to work, we need to make some changes to the HTML.
+
+```html
+<body style="--division-result: calc(100vw / 1px);">
+  <div class="test-container">
+    <div class="actual-content"></div>
+  </div>
+</body>
+```
+
+```css
+.test-container {
+  container-type: inline-size;
+  container-name: division;
+  width: calc(1px * var(--division-result));
+}
+
+.actual-content {
+  /* more container queries and variables can be used to ensure this has the same width as body */
+  width: 100vw;
+}
+```
+
+This creates a named container with a width of either `0` if length division is not supported or something large if
+it is. And therefore, we can use `@container division (width > 0px)` to detect support for length division.
+
+### Conclusion
+
+This is probably a super-niche feature that is not needed very often, but it was still an interesting problem to solve
+so I figured I'd share it.
