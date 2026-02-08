@@ -3,6 +3,7 @@ import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  cacheComponents: true,
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   transpilePackages: ["bsky-react-post"],
   // transpilePackages: ['@stylexjs/open-props'],

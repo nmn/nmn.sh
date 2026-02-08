@@ -1,8 +1,7 @@
 import { Feed } from "feed";
 import { getBlogPosts } from "./getPosts";
-import { unstable_cache } from "next/cache";
-
-export const getFeed = unstable_cache(async function getFeed() {
+export async function getFeed() {
+  "use cache";
   const siteURL = "https://nmn.sh";
   const feedOptions = {
     title: "nmn.sh",
@@ -44,4 +43,4 @@ export const getFeed = unstable_cache(async function getFeed() {
     console.error(error);
     return feed;
   }
-});
+}
