@@ -14,13 +14,11 @@ import path from "path";
 export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 <Container path={__dirname}>
-  <Word scale={158}>Replacing</Word>
-  <Word scale={54} italic>
-    {"Eval"}
-  </Word>
-  <Word scale={74}>with</Word>
-  <Word scale={21}>a</Word>
-  <Word scale={193}>Web Worker</Word>
+  <Word>Replacing</Word>
+  <Word italic>{"Eval"}</Word>
+  <Word>with</Word>
+  <Word>a</Word>
+  <Word>Web Worker</Word>
 </Container>
 
 Originally published [on naman34.svbtle.com](https://naman34.svbtle.com/replacing-eval-with-a-web-worker)
@@ -77,7 +75,7 @@ var window = {};
 window.alert = function () {
   console.log.apply(
     console,
-    ["Alert: "].concat(Array.prototype.slice.call(arguments))
+    ["Alert: "].concat(Array.prototype.slice.call(arguments)),
   );
 };
 var alert = window.alert;
@@ -94,13 +92,13 @@ var console = {
   error: function () {
     console.log.apply(
       console,
-      ["ERROR: "].concat(Array.prototype.slice.call(arguments))
+      ["ERROR: "].concat(Array.prototype.slice.call(arguments)),
     );
   },
   warn: function () {
     console.log.apply(
       console,
-      ["WARNING: "].concat(Array.prototype.slice.call(arguments))
+      ["WARNING: "].concat(Array.prototype.slice.call(arguments)),
     );
   },
 };
@@ -109,7 +107,7 @@ self.addEventListener(
   function (e) {
     // your code from the editor goes here
   },
-  false
+  false,
 );
 ```
 
@@ -138,7 +136,7 @@ worker.addEventListener(
   function (e) {
     var string = e.data.toString();
     this.$el.find(".console").append("<p>" + string + "</p>");
-  }.bind(this)
+  }.bind(this),
 );
 
 // add a listener for errors from the Worker

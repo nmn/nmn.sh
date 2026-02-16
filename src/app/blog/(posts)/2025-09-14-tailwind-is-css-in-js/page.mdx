@@ -1,35 +1,27 @@
 export const metadata = {
-  title: 'Either, Tailwind is CSS-in-JS ...',
-  date: '2025-09-14',
-  author: 'Naman Goel',
+  title: "Either, Tailwind is CSS-in-JS ...",
+  date: "2025-09-14",
+  author: "Naman Goel",
   published: true,
-  tags: ['meta'],
+  tags: ["meta"],
   description: "... or, StyleX isn't",
 };
 
-import { Image, IFrame } from '@/mdx-components';
-import { Container, Word } from '@/app/blog/SlabTitle';
+import { Image, IFrame } from "@/mdx-components";
+import { Container, Word } from "@/app/blog/SlabTitle";
 
-import path from 'path';
+import path from "path";
 export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 <Container path={__dirname}>
-  <Word scale={70} italic>
-    {'Either'}
-  </Word>
-  <Word scale={135}>Tailwind</Word>
-  <Word scale={17} italic>
-    {'is'}
-  </Word>
-  <Word scale={145}>CSS-in-JS</Word>
+  <Word italic>{"Either"}</Word>
+  <Word>Tailwind</Word>
+  <Word italic>{"is"}</Word>
+  <Word>CSS-in-JS</Word>
   <br />
-  <Word scale={26} italic>
-    {'or'}
-  </Word>
-  <Word scale={110}>StyleX</Word>
-  <Word scale={46} italic>
-    {'isn’t'}
-  </Word>
+  <Word italic>{"or"}</Word>
+  <Word>StyleX</Word>
+  <Word italic>{"isn’t"}</Word>
 </Container>
 
 The exact way that we write CSS for our web apps is a niche topic, and yet there is a huge amount

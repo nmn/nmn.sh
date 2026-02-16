@@ -15,13 +15,13 @@ import path from "path";
 export const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 <Container path={__dirname}>
-  <Word scale={94}>Fixing</Word>
-  <Word scale={64}>Web</Word>
-  <Word scale={202}>Components</Word>
+  <Word>Fixing</Word>
+  <Word>Web</Word>
+  <Word>Components</Word>
 </Container>
 
 I'm pretty open about my many issues with "Web Components". I think the entire idea is a bit
-misguided. However, I do understand that the web doesn't do breaking changes and I've *long*
+misguided. However, I do understand that the web doesn't do breaking changes and I've _long_
 been diving into the various APIs that exist to create so-called "web components". I've previously
 written about [what web components can do](/blog/2023-08-17-what-do-web-components-do) where I looked
 at the capabilities of custom elements, shadow DOM and template elements.
@@ -39,24 +39,25 @@ where it falls short.
 Custom elements are, in my opinion, the most useful API under the web components umbrella, but what they provide is fairly
 simple: mount and unmount events. This is vastly superior to using `MutationObserver` which is the only other alternative.
 Solenoid makes extensive use of custom elements to make streaming interactivity possible. However, while building Solenoid,
-I discovered the most annoying detail in *how* the `onConnectedCallback` event of custom elements work. When streaming some
+I discovered the most annoying detail in _how_ the `onConnectedCallback` event of custom elements work. When streaming some
 HTML with custom elements, `onConnectedCallback` fires as soon as the opening tag is parsed by the browser. This is too early
 as it becomes impossible to run any logic that depends on knowing the children of the element.
 
-I understand *why* this is the case. The HTML parser is the browser is forgiving by design and will create a valid DOM even
+I understand _why_ this is the case. The HTML parser is the browser is forgiving by design and will create a valid DOM even
 without a closing tag. But that ends up punishing correct HTML to deal with the edge-cases of malformed HTML.
 
 #### Proposal: `onCompletelyConnectedCallback`
 
 Add another method to the custom element API that waits for the element to finish rendering before firing. In order to make this work,
 the browser should wait for one of the following to happen:
+
 - A closing tag is parsed for the element
 - A closing tag for a parent element is parsed
 - The HTML stream ends.
 
 ### Shadow DOM is all or nothing
 
-Shadow DOM does a *lot*, and its encapsulation features are more of a hindrance than a help when building apps. CSS features such as `@scope`
+Shadow DOM does a _lot_, and its encapsulation features are more of a hindrance than a help when building apps. CSS features such as `@scope`
 provide style encapsulation in a way that developers actually want, and the way it divides up the DOM into light and shadow trees just adds
 unnecessary complexity. However, if it is going to exist, it should at least have some knobs available to opt-in or out of different kinds
 of encapsulation.
@@ -73,11 +74,17 @@ On the flip side, `@scope` already gives us a way to encapsulate CSS and nothing
 
 This is by far the most disappointing limitation I discovered while learning about the web component APIs. Slots are a powerful feature and can enable
 out of order streaming and "portals" without any JavaScript. However, their use cases are greatly limited by the fact that slotted content
-*must* be a top level child of the element with a shadow DOM.
+_must_ be a top level child of the element with a shadow DOM.
 
-<iframe 
-  height="400" 
-  style={{ width: "100%", maxWidth: "56rem", marginInline: "auto", display: "block", marginTop: 32 }}
+<iframe
+  height="400"
+  style={{
+    width: "100%",
+    maxWidth: "56rem",
+    marginInline: "auto",
+    display: "block",
+    marginTop: 32,
+  }}
   scrolling="no"
   title="No Nested Slots"
   src="https://codepen.io/naman34/embed/ogLdNgp?default-tab=html%2Cresult"
@@ -85,9 +92,10 @@ out of order streaming and "portals" without any JavaScript. However, their use 
   loading="lazy"
   allowtransparency="true"
 >
-  See the Pen <a href="https://codepen.io/naman34/pen/ogLdNgp">
-  No Nested Slots</a> by Naman Goel (<a href="https://codepen.io/naman34">@naman34</a>)
-  on <a href="https://codepen.io">CodePen</a>.
+  See the Pen{" "}
+  <a href="https://codepen.io/naman34/pen/ogLdNgp">No Nested Slots</a> by Naman
+  Goel (<a href="https://codepen.io/naman34">@naman34</a>) on{" "}
+  <a href="https://codepen.io">CodePen</a>.
 </iframe>
 
 #### Proposal: Slots that work on any level
@@ -100,5 +108,3 @@ Additionally, it's cumbersome to opt-in to shadow DOM just to use slots. Add an 
 and then any children with a `slot` attribute should be slotted to the nearest `<slot>` element with the same name.
 
 Thankfully, something similar is already being proposed, but I think extending Slots for this use-case makes for a better and more consistent API.
-
-
