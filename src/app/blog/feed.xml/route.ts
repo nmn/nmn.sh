@@ -1,7 +1,7 @@
-import { unstable_cache } from "next/cache";
 import { getFeed } from "../getFeed";
 
-export const GET = unstable_cache(async function get() {
+export const GET = async function get() {
+  "use cache";
   let feed;
   try {
     feed = await getFeed();
@@ -17,5 +17,5 @@ export const GET = unstable_cache(async function get() {
       "Content-Type": "application/xml; charset=utf-8",
     },
   });
-});
+};
 export const dynamic = "force-static";
