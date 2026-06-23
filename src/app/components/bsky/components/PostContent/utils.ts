@@ -5,6 +5,7 @@ import type {
   FacetMention,
   FacetTag,
   RichTextProps,
+  $Typed,
 } from "@atproto/api";
 import { hasProp, isObj } from "../../utils";
 import { UnicodeString } from "./unicode";
@@ -83,7 +84,7 @@ const facetFilter = (facet: Facet) =>
   // discard negative-length facets. zero-length facets are valid
   facet.index.byteStart <= facet.index.byteEnd;
 
-function isLink(v: unknown): v is AppBskyRichtextFacet.Link {
+function isLink(v: unknown): v is $Typed<AppBskyRichtextFacet.Link> {
   return (
     isObj(v) &&
     hasProp(v, "$type") &&
@@ -91,7 +92,7 @@ function isLink(v: unknown): v is AppBskyRichtextFacet.Link {
   );
 }
 
-function isMention(v: unknown): v is AppBskyRichtextFacet.Mention {
+function isMention(v: unknown): v is $Typed<AppBskyRichtextFacet.Mention> {
   return (
     isObj(v) &&
     hasProp(v, "$type") &&
@@ -99,7 +100,7 @@ function isMention(v: unknown): v is AppBskyRichtextFacet.Mention {
   );
 }
 
-function isTag(v: unknown): v is AppBskyRichtextFacet.Tag {
+function isTag(v: unknown): v is $Typed<AppBskyRichtextFacet.Tag> {
   return (
     isObj(v) && hasProp(v, "$type") && v.$type === "app.bsky.richtext.facet#tag"
   );

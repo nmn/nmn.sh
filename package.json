@@ -7,13 +7,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
     "@next/mdx": "^16.2.9",
-    "@stylexjs/stylex": "^0.17.5",
+    "@stylexjs/stylex": "^0.19.0",
     "@types/mdx": "^2.0.14",
     "bright": "^1.0.0",
     "feed": "^5.1.0",
@@ -24,18 +24,18 @@
     "react-tweet": "^3.3.1"
   },
   "devDependencies": {
-    "@atproto/api": "^0.13.35",
-    "@babel/preset-typescript": "^7.29.7",
-    "@babel/runtime": "^7.29.7",
-    "@stylexjs/babel-plugin": "^0.17.5",
-    "@stylexjs/eslint-plugin": "^0.17.5",
-    "@stylexjs/postcss-plugin": "^0.17.5",
-    "@types/node": "^22.20.0",
+    "@atproto/api": "^0.20.19",
+    "@babel/preset-typescript": "^8.0.1",
+    "@babel/runtime": "^8.0.0",
+    "@stylexjs/babel-plugin": "^0.19.0",
+    "@stylexjs/eslint-plugin": "^0.19.0",
+    "@stylexjs/postcss-plugin": "^0.19.0",
+    "@types/node": "^26.0.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "babel-plugin-alias-config": "^0.1.0",
     "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.39.4",
     "eslint-config-next": "16.2.9",
     "eslint-plugin-react-hooks": "^7.1.1",
     "typescript": "^6.0.3"

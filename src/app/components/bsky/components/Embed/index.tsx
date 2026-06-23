@@ -519,7 +519,9 @@ function StarterPackEmbed({ content }: StarterPackEmbed) {
   );
 }
 
-function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
+function getStarterPackImage(
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
+) {
   const rkey = getRkey(starterPack);
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`;
 }
