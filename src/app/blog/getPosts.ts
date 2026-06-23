@@ -1,6 +1,5 @@
 import fs from "fs/promises";
 import path from "path";
-import { unstable_cache } from "next/cache";
 import * as runtime from "react/jsx-runtime";
 import { evaluate } from "@mdx-js/mdx";
 
@@ -15,7 +14,8 @@ export type Config = {
   tags?: string[];
 };
 
-export const getBlogPosts = unstable_cache(async () => {
+export const getBlogPosts = async () => {
+  "use cache";
   const blogs = await fs.readdir(blogDir);
 
   // filter for only folders
@@ -59,4 +59,4 @@ export const getBlogPosts = unstable_cache(async () => {
     .sort((a, b) =>
       a.date != null && b.date != null ? b.date.localeCompare(a.date) : 0
     );
-});
+};
