@@ -1,0 +1,108 @@
+export const metadata = {
+  title: 'Quality in the Age of AI Engineering',
+  date: '2026-02-16',
+  author: 'Naman Goel',
+  published: false,
+  tags: ['meta'],
+  description:
+    'AI can generate software faster than ever, but speed without quality is no longer enough.',
+};
+
+import { Container, Word } from '@/app/blog/SlabTitle';
+
+import path from 'path';
+export const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+<Container path={__dirname}>
+  <Word>Software</Word>
+  <Word>Quality</Word>
+  <Word italic>in</Word>
+  <Word>the</Word>
+  <Word>Age</Word>
+  <Word>of</Word>
+  <Word>AI</Word>
+</Container>
+
+A long time ago the phrase “ideas are cheap, show me the code” made sense.
+It made sense because turning an idea into quality software took effort, talent and time.
+A lot of time. Now, code is cheap. Getting a working prototype built for something that would take weeks
+or months can take just minutes.
+
+This changes things.
+
+It would be easy to think that now that code is cheap, ideas are where the value lies. It would also be wrong.
+Ideas were _already_ cheap. Their value may have increased proportionally simply because code is that much
+cheaper, but nothing has fundamentally changed to give ideas any more value than they had before. If anything,
+the fact that almost any idea can be prototyped cheaply might make ideas worth even less than before. In fact,
+the code was never the most valuable part in the first place. It was the execution. The quality of the
+final product.
+
+This is a common trap that we fall into in the tech industry. When the internet connected the world, it didn't just
+bring valuable information to the people. It brought everything from high quality educational material and award winning
+movies to kids literally eating Tide pods.
+
+Similarly, just because AI can now generate code for us, doesn't mean that it will be used to build quality software.
+There will just be a lot more software, and quality will become the only way to stand out.
+In fact, as AI makes code ever more accessible, the percentage of low quality software is exploding.
+Massive bugs and dangerous security vulnerabilities are becoming nearly routine.
+
+But, although AI is enabling this explosion of software, it is actually also easier than ever to use AI to test, optimize
+and harden software. We just have to choose to use AI to raise the bar for quality rather than focussing on quantity.
+
+So the question is no longer:
+“Can we write this quickly?”
+
+It’s:
+“Can we do better than the default output?”
+
+The answer, in its simplest form, is obvious and underused: tests.
+LLMs can generate tests at a scale and consistency that still feels novel.
+If we use AI only as an engine to generate code instead of using it also as a quality tool,
+then we're wasting that potential opportunity.
+
+At the least AI should raise baseline diligence: generate thorough edge cases, model failure cases that are realistic and meaningful,
+produce mutation-style checks and stress tests, and suggest invariants before we run the tests. But I think there's more that can be done.
+Test generation is just an entry point, not the final destination.
+
+LLMs can apply consistent, mechanical attention to constraint-checking in ways that humans typically don't.
+You can imagine harnesses that constantly synthesize counterexamples. Agents that must produce a reproducible
+failure matrix before merging. Generation flows where every implementation path is compared against latency budgets,
+memory budgets and accessibility considerations.
+
+This also changes what "good tooling" means. We always optimize for DX first. DX matters, but it's a force multiplier
+not the target. When AI writes an implementation the cost of a small DX preference is lower. The question becomes: what
+are the abstractions where correctness and performance become easier?
+
+And this implies a deeper design decision for frameworks and libraries. We should stop choosing stack based on "feels nice
+for humans to write once" and start choosing stack based on "hard for agents to mis-use." An abstraction is only good if the
+most likely path forward is also the correct one. Otherwise AI will just optimize for it.
+
+That's why I think "developer happiness" alone is not a sufficient thing anymore when choosing stacks. Style systems, compiler
+behavior and rendering semantics matter more once agents can generate architecture at scale.
+
+That's also why I'm increasingly skeptical that React is the "last framework" we all should converge on. I'm not against React.
+But when code is abundant, the question is no longer "can humans be productive with this?" The question is: can a platform keep
+correctness high when automation writes most of the code?
+
+Solid stays interesting because it gives us a model where reactivity and rendering are explicit and tightly bound. Could we make
+the platform better for agent-authored code? Absolutely. If a framework requires API changes to be more appropriate for AI-generated
+systems, we should make them. And if we can improve on that model with something like solenoid, we should. If we need to go from
+lit-html and move into something else because it makes agent-written software more robust, we should.
+
+The same applies at a lower level. When we move from prototype to production, we need to ask: does this primitive reduce cognitive
+load for correctness? Does this API limit incidental complexity? Are edge cases obvious? If the answer is no, then we should not
+mistake velocity for progress.
+
+There's an important secondary effect here: ecosystem lock-in becomes easier to manage than we think. If agent workflows need a
+different toolchain than humans, then we can adapt the ecosystem to it. We can port utilities, migrate abstractions and optimize
+for a new reality instead of defending old defaults.
+
+So this is not an anti-AI rant. This is a request to raise the bar now that AI removed our old bottleneck.
+
+The story used to be: "If we can build it fast, we are done."
+
+Now the story is: "If we can build it fast and it stays correct long enough to earn trust, then we are done."
+
+As code gets cheaper, stop rewarding quantity. Start rewarding quality at every layer: end-user features that solve problems,
+architecture that reduces incidental complexity, primitives that are hard to get wrong, and teams who can maintain confidence
+over time. That's the market where AI becomes useful in a way it should be: not as productivity speedgun but quality amplifier.
