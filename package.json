@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rm -rf .next .open-next",
     "dev": "next dev",
-    "build": "next build",
+    "build": "opennextjs-cloudflare build",
     "start": "next start",
     "lint": "eslint .",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
