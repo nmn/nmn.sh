@@ -6,15 +6,22 @@
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
   },
+  "kv_namespaces": [
+    {
+      "binding": "LINKS",
+      "id": "09100366527e4003b111eb58a1f2fc78",
+      "remote": true,
+    },
+  ],
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "nmn-sh"
-    }
-  ]
+      "service": "nmn-sh",
+    },
+  ],
 }
