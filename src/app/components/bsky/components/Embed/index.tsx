@@ -379,13 +379,14 @@ function GenericWithImageEmbed({
           <img
             src={image}
             alt={title}
-            {...stylex.props(styles.genericImage)}
-            {...stylex.props(styles.genericImageImg)}
+            {...stylex.props(styles.genericImage, styles.genericImageImg)}
           />
         ) : (
           <div
-            {...stylex.props(styles.genericImage)}
-            {...stylex.props(styles.genericImagePlaceholder)}
+            {...stylex.props(
+              styles.genericImage,
+              styles.genericImagePlaceholder
+            )}
           />
         )}
         <div {...stylex.props(styles.genericTitleAndDescription)}>

@@ -1,62 +1,58 @@
-import fs from "fs/promises";
-import path from "path";
-import { unstable_cache } from "next/cache";
-import * as runtime from "react/jsx-runtime";
-import { evaluate } from "@mdx-js/mdx";
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-const blogDir = path.join(__dirname, "(posts)");
-
 export type Config = {
   title?: string;
   description?: string;
   date?: string;
+  author?: string;
   published?: boolean;
   tags?: string[];
 };
 
-export const getBlogPosts = unstable_cache(async () => {
-  const blogs = await fs.readdir(blogDir);
+export type BlogPost = Config & {
+  path: string;
+};
 
-  // filter for only folders
-  const blogsPathsAndTitles = blogs.map(async (blog) => {
-    const blogPath = path.join(blogDir, blog);
-    const stat = await fs.stat(blogPath);
+type BlogPostModule = {
+  metadata?: Config;
+};
 
-    if (!stat.isDirectory()) {
-      return null;
-    }
+type BlogPostContext = {
+  keys(): string[];
+  <T = BlogPostModule>(id: string): T | Promise<T>;
+};
 
-    const filesWithinFolder = await fs.readdir(blogPath);
-    if (!filesWithinFolder.includes("page.mdx")) {
-      return null;
-    }
+type RequireWithContext = {
+  context(
+    directory: string,
+    useSubdirectories: boolean,
+    regExp: RegExp
+  ): BlogPostContext;
+};
 
-    const filePath = path.join(blogPath, "page.mdx");
-    const file = await fs.readFile(filePath, "utf-8");
+const postContext = (require as unknown as RequireWithContext).context(
+  "./(posts)",
+  true,
+  /\/page\.mdx$/
+);
 
-    const lines = file.split("\n");
-    const firstImport = lines.findIndex((line) => line.startsWith("import "));
+export async function getBlogPosts() {
+  const posts = await Promise.all(
+    postContext.keys().map(async (key) => {
+      const { metadata } = await postContext<BlogPostModule>(key);
 
-    const relevantContent = lines.slice(0, firstImport).join("\n");
+      if (metadata == null) {
+        return null;
+      }
 
-    const { metadata }: { metadata?: Config } = (await evaluate(
-      relevantContent,
-      { ...runtime }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    )) as any;
+      return {
+        ...metadata,
+        path: "/blog/" + key.replace(/^\.\//, "").replace(/\/page\.mdx$/, ""),
+      };
+    })
+  );
 
-    if (metadata == null) {
-      return null;
-    }
-
-    return { ...metadata, path: "/blog/" + blog };
-  });
-  const maybePostsResolved = await Promise.all(blogsPathsAndTitles);
-
-  return maybePostsResolved
-    .filter((post) => post !== null)
+  return posts
+    .filter((post): post is BlogPost => post !== null)
     .sort((a, b) =>
       a.date != null && b.date != null ? b.date.localeCompare(a.date) : 0
     );
-});
+}

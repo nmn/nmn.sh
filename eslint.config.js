@@ -6,7 +6,7 @@ const reactCompiler = require("eslint-plugin-react-compiler");
 /** @type {import("eslint").Linter.Config[]} */
 module.exports = [
   {
-    ignores: ["eslint.config.js"],
+    ignores: ["eslint.config.js", ".next/**", ".open-next/**", ".wrangler/**"],
   },
   ...nextCoreWebVitals,
   ...nextTypescript,
