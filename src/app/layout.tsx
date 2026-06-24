@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import * as stylex from "@stylexjs/stylex";
 import { colors, fonts, spacing } from "./vars.stylex";
 import ThemeControl from "./ThemeControl";
@@ -72,7 +73,16 @@ export default function RootLayout({
                 <MastodonLogo style={styles.footerLogo} />
               </a>
             </div>
-            <div>All Rights Reserved.</div>
+            <div {...stylex.props(styles.footerMeta)}>
+              <span>All Rights Reserved.</span>
+              <Link
+                href="/links"
+                prefetch={false}
+                {...stylex.props(styles.footerLink)}
+              >
+                Links
+              </Link>
+            </div>
           </footer>
         </ThemeControl>
       </html>
@@ -91,15 +101,15 @@ function PreloadedFont({ href }: { href: string }) {
 
 const styles = stylex.create({
   html: {
+    margin: {
+      default: 0,
+      ":where(#\\#), *": 0,
+    },
     boxSizing: {
       default: "border-box",
       ":where(#\\#), *": "border-box",
     },
     colorScheme: "light dark",
-    margin: {
-      default: 0,
-      ":where(#\\#), *": 0,
-    },
   },
   body: {
     MozOsxFontSmoothing: "grayscale",
@@ -109,30 +119,46 @@ const styles = stylex.create({
     fontFamily: fonts.sans,
   },
   footer: {
+    gap: spacing.lg,
+    paddingBlock: 32,
     alignItems: "center",
     color: colors.surface1,
     display: "flex",
+    flexWrap: "wrap",
     fontFamily: fonts.sans,
-    gap: spacing.lg,
     justifyContent: "center",
-    marginTop: spacing.xl,
-    paddingBlock: 32,
     textAlign: "center",
+    marginTop: spacing.xl,
   },
-  footerLogos: {
+  footerMeta: {
+    gap: spacing.xxs,
     alignItems: "center",
     display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  footerLink: {
+    textDecoration: {
+      default: "none",
+      ":hover": "underline",
+    },
+    color: "inherit",
+    textUnderlineOffset: "4px",
+  },
+  footerLogos: {
     gap: spacing.xxs,
+    alignItems: "center",
+    display: "flex",
     justifyContent: "center",
   },
   logoLink: {
+    transition: "opacity 0.2s ease-in-out",
     color: colors.fg,
     opacity: {
       default: 0.3,
       ":hover": 1,
       "@media not (hover: hover)": 1,
     },
-    transition: "opacity 0.2s ease-in-out",
   },
   footerLogo: {
     fill: "currentColor",
